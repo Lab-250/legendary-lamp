@@ -15,11 +15,10 @@ import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ListDashboardItems from "./ListItems";
-import { type GridColDef, type GridValueGetterParams } from "@mui/x-data-grid";
+import { type GridColDef } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -36,7 +35,6 @@ import Data from "./data/Data";
 import MyCourse from "./course/myCourse/MyCourse";
 
 import { appConfig } from "../common/config";
-import { type Course } from "@prisma/client";
 import { api } from "@/utils/api";
 
 const drawerWidth = 240;
@@ -215,8 +213,8 @@ export default function Dashboard() {
                     price: item.price,
                     place: item.place,
                     income: item.income,
-                    executor: item.Executor.name,
-                    lecturer: item.Lecturer.name,
+                    executor: item.Executor?.name,
+                    lecturer: item.Lecturer?.name,
                   })) ?? {}
                 }
                 columns={columns}
@@ -232,7 +230,12 @@ export default function Dashboard() {
     } else if (page === Page.UserCheck) {
       return <UserCheck />;
     } else if (page === Page.CreateCourse) {
-      return <Checkout refetchCourses={refetchCourses} setDataTableView={setPage}></Checkout>;
+      return (
+        <Checkout
+          refetchCourses={refetchCourses}
+          setDataTableView={setPage}
+        ></Checkout>
+      );
     } else if (page === Page.Notice) {
       return <Notice />;
     } else if (page === Page.Topic) {
