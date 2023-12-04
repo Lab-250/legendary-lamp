@@ -5,10 +5,8 @@ import Grid from "@mui/material/Grid";
 import { type Course } from "@prisma/client";
 
 const Review: React.FC<{
-  courseData: Course;
-}> = ({ courseData }) => {
-  console.log(courseData);
-
+  course: Course;
+}> = ({ course }) => {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -16,12 +14,12 @@ const Review: React.FC<{
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <Typography gutterBottom>{courseData.name}</Typography>
-          <Typography gutterBottom>{courseData.price.toFixed(2)}</Typography>
-          <Typography gutterBottom>{courseData.place}</Typography>
-          <Typography gutterBottom>{courseData.time}</Typography>
-          <Typography gutterBottom>{courseData.lecturerId}</Typography>
-          <Typography gutterBottom>{courseData.executorId}</Typography>
+          <Typography gutterBottom>{course.name}</Typography>
+          <Typography gutterBottom>{course.price.toFixed(2)}</Typography>
+          <Typography gutterBottom>{course.place}</Typography>
+          <Typography gutterBottom>{course.time}</Typography>
+          <Typography gutterBottom>{course.lecturerId}</Typography>
+          <Typography gutterBottom>{course.executorId}</Typography>
         </Grid>
       </Grid>
     </React.Fragment>

@@ -14,9 +14,9 @@ import { Label } from "@mui/icons-material";
 import { Decimal } from "@prisma/client/runtime/library";
 
 const CourseForm: React.FC<{
-  courseData: Course;
-  setCourseData: React.Dispatch<React.SetStateAction<Course>>;
-}> = ({ courseData, setCourseData }) => {
+  course: Course;
+  setCourse: React.Dispatch<React.SetStateAction<Course>>;
+}> = ({ course, setCourse }) => {
   const [lecturer, setLecturer] = React.useState([
     {
       id: "1",
@@ -32,14 +32,14 @@ const CourseForm: React.FC<{
   React.useEffect(() => {
     // TODO: database lecturer
     const lecturerData = [
-      { id: "1", name: "111" },
+      { id: "1", name: "测试1" },
       { id: "2", name: "222" },
       { id: "3", name: "333" },
     ];
     setLecturer(lecturerData);
     // TODO: database executor
     const executorData = [
-      { id: "1", name: "111" },
+      { id: "1", name: "测试1" },
       { id: "2", name: "222" },
       { id: "3", name: "333" },
       { id: "4", name: "444" },
@@ -48,13 +48,11 @@ const CourseForm: React.FC<{
   }, []);
 
   const handleInputChange = (value: string | number, filedName: string) => {
-    setCourseData({
-      ...courseData,
+    setCourse({
+      ...course,
       [filedName]: value,
     });
   };
-
-  console.log(courseData);
 
   return (
     <React.Fragment>
@@ -68,7 +66,7 @@ const CourseForm: React.FC<{
             id="name"
             name="name"
             onChange={(e) => handleInputChange(e.target.value, "name")}
-            value={courseData.name ?? ""}
+            value={course?.name ?? ""}
             label="课程名称"
             fullWidth
             autoComplete="given-name"
@@ -82,7 +80,7 @@ const CourseForm: React.FC<{
             name="price"
             type="number"
             onChange={(e) => handleInputChange(Number(e.target.value), "price")}
-            value={courseData.price ?? ""}
+            value={course?.price ?? ""}
             label="课程价格"
             fullWidth
             variant="standard"
@@ -94,7 +92,7 @@ const CourseForm: React.FC<{
             id="place"
             name="place"
             onChange={(e) => handleInputChange(e.target.value, "place")}
-            value={courseData.place ?? ""}
+            value={course?.place ?? ""}
             label="课程地点"
             fullWidth
             variant="standard"
@@ -106,7 +104,7 @@ const CourseForm: React.FC<{
             id="time"
             name="time"
             onChange={(e) => handleInputChange(e.target.value, "time")}
-            value={courseData.time ?? ""}
+            value={course?.time ?? ""}
             label="课程时间"
             fullWidth
             variant="standard"
@@ -120,7 +118,7 @@ const CourseForm: React.FC<{
               id="lecturer"
               name="lecturer"
               onChange={(e) => handleInputChange(e.target.value, "lecturerId")}
-              value={courseData.lecturerId ?? ""}
+              value={course?.lecturerId ?? ""}
               variant="standard"
             >
               {lecturer.map((item, index) => (
@@ -139,7 +137,7 @@ const CourseForm: React.FC<{
               id="executor"
               name="executor"
               onChange={(e) => handleInputChange(e.target.value, "executorId")}
-              value={courseData.executorId ?? ""}
+              value={course?.executorId ?? ""}
               variant="standard"
             >
               {executor.map((item, index) => (

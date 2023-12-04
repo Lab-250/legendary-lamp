@@ -1,5 +1,5 @@
 export const appConfig = {
-  APP_TITLE: "XXX SYSTEM",
+  APP_TITLE: "浩奇培训信息管理系统",
 };
 
 export enum UserRole {

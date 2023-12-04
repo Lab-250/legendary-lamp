@@ -14,7 +14,12 @@ export const courseRouter = createTRPCRouter({
     }),
 
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.db.course.findMany();
+    return ctx.db.course.findMany({
+      include: {
+        Executor: true,
+        Lecturer: true,
+      },
+    });
   }),
 
   create: publicProcedure

@@ -37,6 +37,7 @@ import MyCourse from "./course/myCourse/MyCourse";
 
 import { appConfig } from "../common/config";
 import { type Course } from "@prisma/client";
+import { api } from "@/utils/api";
 
 const drawerWidth = 240;
 
@@ -93,39 +94,64 @@ const defaultTheme = createTheme();
 
 // database
 const columns: GridColDef[] = [
-  { field: "id", headerName: "id", width: 70 },
-  { field: "name", headerName: "名称", width: 130 },
-  { field: "time", headerName: "时间", width: 130 },
-  { field: "place", headerName: "地点", width: 130 },
+  {
+    field: "id",
+    headerName: "id",
+    width: 50,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "name",
+    headerName: "名称",
+    width: 230,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "time",
+    headerName: "时间",
+    width: 180,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "place",
+    headerName: "地点",
+    width: 270,
+    align: "center",
+    headerAlign: "center",
+  },
   {
     field: "price",
     headerName: "价格",
     type: "number",
-    width: 90,
+    width: 70,
+    align: "center",
+    headerAlign: "center",
   },
   {
-    field: "fullName",
-    headerName: "Full name",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    width: 160,
-    valueGetter: (params: GridValueGetterParams) =>
-      `${params.row.name || ""} ${params.row.time || ""}`,
+    field: "income",
+    headerName: "收入",
+    type: "number",
+    width: 70,
+    align: "center",
+    headerAlign: "center",
   },
-];
-
-// database
-const rows = [
-  { id: 1, name: "Snow", time: "Jon", price: 35.4343, test: "test" },
-  { id: 2, name: "Lannister", time: "Cersei", price: 42 },
-  { id: 3, name: "Lannister", time: "Jaime", price: 45 },
-  { id: 4, name: "Stark", time: "Arya", price: 16 },
-  { id: 5, name: "Targaryen", time: "Daenerys", price: null },
-  { id: 6, name: "Melisandre", time: null, price: 150 },
-  { id: 7, name: "Clifford", time: "Ferrara", price: 44 },
-  { id: 8, name: "Frances", time: "Rossini", price: 36 },
-  { id: 9, name: "Roxie", time: "Harvey", price: 65 },
-  { id: 10, name: "Roxie", time: "Harvey", price: 65 },
+  {
+    field: "executor",
+    headerName: "执行人",
+    width: 100,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "lecturer",
+    headerName: "讲师",
+    width: 100,
+    align: "center",
+    headerAlign: "center",
+  },
 ];
 
 export enum Page {
@@ -140,28 +166,20 @@ export enum Page {
 }
 
 export default function Dashboard() {
+  const { data: courses, refetch: refetchCourses } =
+    api.course.getAll.useQuery();
+  console.log(courses);
+
   const { data: session } = useSession();
 
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
   const [page, setPage] = React.useState<Page>(Page.Dashboard);
   const handleCreateButtonClick = () => {
     setPage(Page.CreateCourse);
   };
-
-  const [courseData, setCourseData] = React.useState<Course>({
-    id: "",
-    name: "",
-    time: "",
-    place: "",
-    price: null,
-    income: null,
-    lecturerId: "",
-    executorId: "",
-  });
 
   const switchPage = (page: Page) => {
     if (page === Page.Dashboard) {
@@ -188,7 +206,21 @@ export default function Dashboard() {
           </Grid>
           <Grid item xs={12}>
             <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-              <DataTable rows={rows} columns={columns} />
+              <DataTable
+                rows={
+                  courses?.map((item, index) => ({
+                    id: index + 1,
+                    time: item.time,
+                    name: item.name,
+                    price: item.price,
+                    place: item.place,
+                    income: item.income,
+                    executor: item.Executor.name,
+                    lecturer: item.Lecturer.name,
+                  })) ?? {}
+                }
+                columns={columns}
+              />
             </Paper>
           </Grid>
         </Grid>
@@ -200,13 +232,7 @@ export default function Dashboard() {
     } else if (page === Page.UserCheck) {
       return <UserCheck />;
     } else if (page === Page.CreateCourse) {
-      return (
-        <Checkout
-          courseData={courseData}
-          setCourseData={setCourseData}
-          setDataTableView={setPage}
-        ></Checkout>
-      );
+      return <Checkout refetchCourses={refetchCourses} setDataTableView={setPage}></Checkout>;
     } else if (page === Page.Notice) {
       return <Notice />;
     } else if (page === Page.Topic) {

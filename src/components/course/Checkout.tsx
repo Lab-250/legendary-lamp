@@ -10,33 +10,45 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import AddressForm from "./CouseForm";
 import Review from "./Review";
+import { api } from "@/utils/api";
 
 import { type Course } from "@prisma/client";
 import { Page } from "../Dashboard";
 
 const Checkout: React.FC<{
-  courseData: Course;
-  setCourseData: React.Dispatch<React.SetStateAction<Course>>;
+  refetchCourses: any;
   setDataTableView: React.Dispatch<React.SetStateAction<Page>>;
-}> = ({ courseData, setCourseData, setDataTableView }) => {
+}> = ({ refetchCourses, setDataTableView }) => {
+  const createCourse = api.course.create.useMutation({
+    onSuccess: () => {
+      void refetchCourses();
+    },
+  });
+  const [course, setCourse] = React.useState<Course>();
+
   const steps = ["录入课程信息", "确认课程信息"];
   function getStepContent(step: number) {
     switch (step) {
       case 0:
         return (
-          <AddressForm courseData={courseData} setCourseData={setCourseData} />
+          <AddressForm course={course} setCourse={setCourse} />
         );
       case 1:
-        return <Review courseData={courseData} />;
+        return <Review course={course} />;
       default:
         throw new Error("Unknown step");
     }
   }
 
   const [activeStep, setActiveStep] = React.useState(0);
+
   const handleNext = () => {
-    if (activeStep === steps.length) setDataTableView(Page.Dashboard);
-    else setActiveStep(activeStep + 1);
+    if (activeStep === steps.length) {
+      setDataTableView(Page.Dashboard);
+    }
+    else {
+      setActiveStep(activeStep + 1);
+    }
   };
   const handleBack = () => {
     setActiveStep(activeStep - 1);
@@ -87,7 +99,16 @@ const Checkout: React.FC<{
                 )}
                 <Button
                   variant="contained"
-                  onClick={handleNext}
+                  onClick={() => {
+                    if(activeStep === steps.length - 1) {
+                      createCourse.mutate({
+                        ...course,
+                        income: 0,
+                      });
+                      setCourse({});
+                    }
+                    handleNext();
+                  }}
                   sx={{ mt: 3, ml: 1 }}
                 >
                   {activeStep === steps.length - 1 ? "提交" : "下一步"}

@@ -13,6 +13,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+import { signIn, signOut, useSession } from "next-auth/react";
+
 import Copyright from "./Copyright";
 import { appConfig } from "@/common/config";
 
@@ -105,6 +107,17 @@ export default function SignIn() {
                 sx={{ mt: 3, mb: 2 }}
               >
                 {"登录"}
+              </Button>
+              <Button
+                className=""
+                style={{}}
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 1, mb: 2 }}
+                onClick={() => void signIn()}
+              >
+                {"第三方登录"}
               </Button>
               <Grid container>
                 <Grid item xs>

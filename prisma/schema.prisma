@@ -82,7 +82,7 @@ model Course {
     price  Decimal
     income Decimal
 
-    lecturer   Lecturer? @relation(fields: [lecturerId], references: [id], onDelete: Cascade)
+    Lecturer   Lecturer? @relation(fields: [lecturerId], references: [id], onDelete: Cascade)
     lecturerId String?
 
     Executor   Executor? @relation(fields: [executorId], references: [id])
