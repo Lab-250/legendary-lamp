@@ -63,6 +63,8 @@ model User {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    Notice    Notice[]
+    Topic     Topic[]
 
     @@index([name])
 }
@@ -162,6 +164,9 @@ model Notice {
     course   Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
     courseId String?
 
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -192,6 +197,9 @@ model Topic {
 
     course   Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
     courseId String?
+
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
