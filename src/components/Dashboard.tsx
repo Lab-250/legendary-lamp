@@ -14,6 +14,9 @@ import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -22,8 +25,9 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ListDashboardItems from "./ListItems";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { Avatar } from "@mui/material";
+
+import { type Course, type Executor, type Lecturer } from "@prisma/client";
 
 import DataTable from "./course/DataTable";
 import Checkout from "./course/Checkout";
@@ -35,7 +39,7 @@ import UserCheck from "./user/userCheck/UserCheck";
 import Data from "./data/Data";
 import MyCourse from "./course/myCourse/MyCourse";
 
-import { appConfig } from "../common/config";
+import { UserRole, appConfig } from "../common/config";
 import { api } from "@/utils/api";
 
 const drawerWidth = 240;
@@ -106,6 +110,7 @@ export default function Dashboard() {
   // session
   const { data: session } = useSession();
   // router
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const router = useRouter();
 
   // api
@@ -135,70 +140,95 @@ export default function Dashboard() {
     if (page === Page.Dashboard) {
       return (
         <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <Paper
-              sx={{
-                p: 2,
-                display: "flex",
-                flexDirection: "rows",
-              }}
-            >
-              <Stack direction="row" spacing={2}>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    setPage(Page.CreateCourse);
-                  }}
-                >
-                  新建（admin）
-                </Button>
-                <Button variant="outlined" onClick={() => {}}>
-                  选课（student）
-                </Button>
-                <Button
-                  variant="outlined"
-                  startIcon={<DeleteIcon />}
-                  onClick={() => {
-                    deleteCourse.mutate({
-                      ids:
-                        courses
-                          ?.filter((e, i) => selectionModel?.includes(i + 1))
-                          .map((e) => e.id) ?? [],
-                    });
-                  }}
-                >
-                  删除（admin）
-                </Button>
-              </Stack>
-            </Paper>
-          </Grid>
+          {(session?.user?.role == UserRole.ADMIN ||
+            session?.user?.role == UserRole.STUDENT) && (
+            <Grid item xs={12}>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: "flex",
+                  flexDirection: "rows",
+                }}
+              >
+                <Stack direction="row" spacing={2}>
+                  {session?.user?.role == UserRole.ADMIN && (
+                    <Button
+                      variant="outlined"
+                      startIcon={<AddCircleOutlineOutlinedIcon />}
+                      onClick={() => {
+                        setPage(Page.CreateCourse);
+                      }}
+                    >
+                      新建课程
+                    </Button>
+                  )}
+                  {session?.user?.role == UserRole.STUDENT && (
+                    <Button
+                      variant="outlined"
+                      startIcon={<BookmarkAddOutlinedIcon />}
+                      onClick={() => {}}
+                    >
+                      申请选课
+                    </Button>
+                  )}
+                  {session?.user?.role == UserRole.ADMIN && (
+                    <Button
+                      variant="outlined"
+                      startIcon={<DeleteOutlineOutlinedIcon />}
+                      onClick={() => {
+                        deleteCourse.mutate({
+                          ids:
+                            courses
+                              ?.filter(
+                                (e: Course, i: number) =>
+                                  selectionModel?.includes(i + 1),
+                              )
+                              .map((e: Course) => e.id) ?? [],
+                        });
+                      }}
+                    >
+                      删除课程
+                    </Button>
+                  )}
+                </Stack>
+              </Paper>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
               <DataTable
                 rows={
-                  courses?.map((item, index) => ({
-                    id: index + 1,
-                    time: item.time,
-                    name: item.name,
-                    price: item.price,
-                    place: item.place,
-                    income: item.income,
-                    executor: item.executor?.name,
-                    lecturer: item.lecturer?.name,
-                  })) ?? {}
+                  courses?.map(
+                    (
+                      item: Course & {
+                        executor: Executor | null;
+                        lecturer: Lecturer | null;
+                      },
+                      index: number,
+                    ) => ({
+                      id: index + 1,
+                      time: item.time,
+                      name: item.name,
+                      price: item.price,
+                      place: item.place,
+                      income: item.income,
+                      executor: item.executor?.name,
+                      lecturer: item.lecturer?.name,
+                    }),
+                  ) ?? {}
                 }
                 columns={[
                   {
                     field: "id",
-                    headerName: "id",
-                    width: 50,
+                    headerName: "编号",
+                    width: 80,
                     align: "center",
                     headerAlign: "center",
                   },
                   {
                     field: "name",
                     headerName: "名称",
-                    width: 210,
+                    width: 220,
                     align: "center",
                     headerAlign: "center",
                   },
@@ -220,15 +250,7 @@ export default function Dashboard() {
                     field: "price",
                     headerName: "价格",
                     type: "number",
-                    width: 70,
-                    align: "center",
-                    headerAlign: "center",
-                  },
-                  {
-                    field: "income",
-                    headerName: "收入",
-                    type: "number",
-                    width: 70,
+                    width: 100,
                     align: "center",
                     headerAlign: "center",
                   },
