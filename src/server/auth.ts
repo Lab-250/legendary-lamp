@@ -1,12 +1,13 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
+import EmailProvider from "next-auth/providers/email";
 import GithubProvider from "next-auth/providers/github";
-// import EmailProvider from "next-auth/providers/email";
+import GoogleProvider from "next-auth/providers/google"
 
 import { env } from "@/env.mjs";
 import { db } from "@/server/db";
@@ -52,11 +53,18 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(db),
   providers: [
-    // EmailProvider({
-    //   server: process.env.EMAIL_SERVER,
-    //   from: process.env.EMAIL_FROM,
-    //   maxAge: 2 * 60 * 60, // 2h
-    // }),
+    EmailProvider({
+      server: {
+        host: env.EMAIL_SERVER_HOST,
+        port: env.EMAIL_SERVER_PORT,
+        auth: {
+          user: env.EMAIL_SERVER_USER,
+          pass: env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: env.EMAIL_FROM,
+      maxAge: 2 * 60 * 60, // 2h
+    }),
     GithubProvider({
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
@@ -66,10 +74,13 @@ export const authOptions: NextAuthOptions = {
           name: profile.name,
           email: profile.email,
           image: profile.avatar_url,
-          role: UserRole.USER,
         };
       },
     }),
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET
+    })
     /**
      * ...add more providers here.
      *

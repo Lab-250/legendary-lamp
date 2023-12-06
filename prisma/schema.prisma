@@ -52,13 +52,14 @@ model User {
     emailVerified DateTime?
     image         String?
     phone         String?
-    role          String?
+    role          String?   @default("USER")
     account       Account[]
     sessions      Session[]
 
-    Lecturer Lecturer?
-    Executor Executor?
-    Student  Student?
+    lecturer                   Lecturer?
+    executor                   Executor?
+    student                    Student?
+    userRoleChangeApplicantion UserRoleChangeApplicantion?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -82,15 +83,15 @@ model Course {
     price  Decimal
     income Decimal
 
-    Lecturer   Lecturer? @relation(fields: [lecturerId], references: [id], onDelete: Cascade)
+    lecturer   Lecturer? @relation(fields: [lecturerId], references: [id], onDelete: Cascade)
     lecturerId String?
 
-    Executor   Executor? @relation(fields: [executorId], references: [id])
+    executor   Executor? @relation(fields: [executorId], references: [id])
     executorId String?
 
-    Student       Student[]
-    PaymentRecord PaymentRecord[]
-    Notice        Notice[]
+    student       Student[]
+    paymentRecord PaymentRecord[]
+    notice        Notice[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -107,7 +108,7 @@ model Lecturer {
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String @unique
 
-    Course Course[]
+    course Course[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -123,7 +124,7 @@ model Executor {
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String @unique
 
-    Course Course[]
+    course Course[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -143,8 +144,8 @@ model Student {
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String @unique
 
-    Course        Course[]
-    PaymentRecord PaymentRecord[]
+    course        Course[]
+    paymentRecord PaymentRecord[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -192,4 +193,12 @@ model Topic {
     updatedAt DateTime @updatedAt
 
     @@index([name])
+}
+
+model UserRoleChangeApplicantion {
+    id       String @id @default(cuid())
+    destType String
+
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String @unique
 }

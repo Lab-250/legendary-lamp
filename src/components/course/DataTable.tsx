@@ -3,7 +3,7 @@ import {
   DataGrid,
 } from "@mui/x-data-grid";
 
-export default function DataTable({ rows, columns }) {
+export default function DataTable({ rows, columns, setSelectionModel }) {
   return (
     <div style={{ height: 700, width: "100%" }}>
       <DataGrid
@@ -16,6 +16,9 @@ export default function DataTable({ rows, columns }) {
         }}
         pageSizeOptions={[5, 10]}
         checkboxSelection
+        onRowSelectionModelChange={(newSelection) => {
+          setSelectionModel(newSelection);
+        }}
       />
     </div>
   );

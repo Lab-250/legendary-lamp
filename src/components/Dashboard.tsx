@@ -1,5 +1,7 @@
 import * as React from "react";
-import { useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -18,7 +20,6 @@ import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ListDashboardItems from "./ListItems";
-import { type GridColDef } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -90,68 +91,6 @@ const Drawer = styled(MuiDrawer, {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-// database
-const columns: GridColDef[] = [
-  {
-    field: "id",
-    headerName: "id",
-    width: 50,
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "name",
-    headerName: "名称",
-    width: 230,
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "time",
-    headerName: "时间",
-    width: 180,
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "place",
-    headerName: "地点",
-    width: 270,
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "price",
-    headerName: "价格",
-    type: "number",
-    width: 70,
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "income",
-    headerName: "收入",
-    type: "number",
-    width: 70,
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "executor",
-    headerName: "执行人",
-    width: 100,
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "lecturer",
-    headerName: "讲师",
-    width: 100,
-    align: "center",
-    headerAlign: "center",
-  },
-];
-
 export enum Page {
   Dashboard,
   MyCourse,
@@ -164,21 +103,34 @@ export enum Page {
 }
 
 export default function Dashboard() {
+  // session
+  const { data: session } = useSession();
+  // router
+  const router = useRouter();
+
+  // api
+  // course api
   const { data: courses, refetch: refetchCourses } =
     api.course.getAll.useQuery();
-  console.log(courses);
+  const deleteCourse = api.course.deleteByIds.useMutation({
+    onSuccess: () => {
+      void refetchCourses();
+    },
+  });
 
-  const { data: session } = useSession();
-
+  // state
+  const [selectionModel, setSelectionModel] = React.useState<number[] | null>(
+    null,
+  );
   const [open, setOpen] = React.useState(true);
+  const [page, setPage] = React.useState<Page>(Page.Dashboard);
+
+  // function
   const toggleDrawer = () => {
     setOpen(!open);
   };
-  const [page, setPage] = React.useState<Page>(Page.Dashboard);
-  const handleCreateButtonClick = () => {
-    setPage(Page.CreateCourse);
-  };
 
+  // page
   const switchPage = (page: Page) => {
     if (page === Page.Dashboard) {
       return (
@@ -192,11 +144,29 @@ export default function Dashboard() {
               }}
             >
               <Stack direction="row" spacing={2}>
-                <Button variant="outlined" onClick={handleCreateButtonClick}>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    setPage(Page.CreateCourse);
+                  }}
+                >
                   新建（admin）
                 </Button>
-                <Button variant="outlined">选课（student）</Button>
-                <Button variant="outlined" startIcon={<DeleteIcon />}>
+                <Button variant="outlined" onClick={() => {}}>
+                  选课（student）
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<DeleteIcon />}
+                  onClick={() => {
+                    deleteCourse.mutate({
+                      ids:
+                        courses
+                          ?.filter((e, i) => selectionModel?.includes(i + 1))
+                          .map((e) => e.id) ?? [],
+                    });
+                  }}
+                >
                   删除（admin）
                 </Button>
               </Stack>
@@ -213,11 +183,71 @@ export default function Dashboard() {
                     price: item.price,
                     place: item.place,
                     income: item.income,
-                    executor: item.Executor?.name,
-                    lecturer: item.Lecturer?.name,
+                    executor: item.executor?.name,
+                    lecturer: item.lecturer?.name,
                   })) ?? {}
                 }
-                columns={columns}
+                columns={[
+                  {
+                    field: "id",
+                    headerName: "id",
+                    width: 50,
+                    align: "center",
+                    headerAlign: "center",
+                  },
+                  {
+                    field: "name",
+                    headerName: "名称",
+                    width: 210,
+                    align: "center",
+                    headerAlign: "center",
+                  },
+                  {
+                    field: "time",
+                    headerName: "时间",
+                    width: 180,
+                    align: "center",
+                    headerAlign: "center",
+                  },
+                  {
+                    field: "place",
+                    headerName: "地点",
+                    width: 270,
+                    align: "center",
+                    headerAlign: "center",
+                  },
+                  {
+                    field: "price",
+                    headerName: "价格",
+                    type: "number",
+                    width: 70,
+                    align: "center",
+                    headerAlign: "center",
+                  },
+                  {
+                    field: "income",
+                    headerName: "收入",
+                    type: "number",
+                    width: 70,
+                    align: "center",
+                    headerAlign: "center",
+                  },
+                  {
+                    field: "executor",
+                    headerName: "执行人",
+                    width: 100,
+                    align: "center",
+                    headerAlign: "center",
+                  },
+                  {
+                    field: "lecturer",
+                    headerName: "讲师",
+                    width: 100,
+                    align: "center",
+                    headerAlign: "center",
+                  },
+                ]}
+                setSelectionModel={setSelectionModel}
               />
             </Paper>
           </Grid>
@@ -276,7 +306,47 @@ export default function Dashboard() {
             >
               {appConfig.APP_TITLE}
             </Typography>
-            <Avatar alt="User Avatar" src={session?.user.image ?? ""} />
+            {session ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: "20px",
+                  alignItems: "center",
+                }}
+              >
+                <Avatar alt="User Avatar" src={session?.user.image ?? ""} />
+                <Typography>{session?.user.email ?? ""}</Typography>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    void signOut();
+                  }}
+                >
+                  登出
+                </Button>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: "20px",
+                  alignItems: "center",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    void signIn();
+                  }}
+                >
+                  登录
+                </Button>
+              </Box>
+            )}
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>

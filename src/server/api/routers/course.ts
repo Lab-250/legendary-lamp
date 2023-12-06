@@ -16,8 +16,8 @@ export const courseRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.db.course.findMany({
       include: {
-        Executor: true,
-        Lecturer: true,
+        executor: true,
+        lecturer: true,
       },
     });
   }),
@@ -68,6 +68,18 @@ export const courseRouter = createTRPCRouter({
       return ctx.db.course.delete({
         where: {
           id: input.id,
+        },
+      });
+    }),
+
+  deleteByIds: publicProcedure
+    .input(z.object({ ids: z.array(z.string()) }))
+    .mutation(({ ctx, input }) => {
+      return ctx.db.course.deleteMany({
+        where: {
+          id: {
+            in: input.ids,
+          }
         },
       });
     }),
