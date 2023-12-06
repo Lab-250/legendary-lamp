@@ -3,10 +3,14 @@ import { useSession } from "next-auth/react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PeopleIcon from "@mui/icons-material/People";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import LayersIcon from "@mui/icons-material/Layers";
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined';
+import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined';
+import BubbleChartOutlinedIcon from "@mui/icons-material/BubbleChartOutlined";
+import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
+import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 
 import { Page } from "./Dashboard";
 import { UserRole } from "@/common/config";
@@ -20,49 +24,43 @@ const ListDashboardItems: React.FC<{
     <React.Fragment>
       <ListItemButton onClick={() => setPage(Page.Dashboard)}>
         <ListItemIcon>
-          <DashboardIcon />
+          <DashboardOutlinedIcon />
         </ListItemIcon>
         <ListItemText primary="课程管理" />
       </ListItemButton>
 
-      {(session?.user?.role == UserRole.STUDENT ||
-        session?.user?.role == UserRole.LECTURER ||
-        session?.user?.role == UserRole.EXCUTOR) && (
-        <ListItemButton onClick={() => setPage(Page.MyCourse)}>
-          <ListItemIcon>
-            <LayersIcon />
-          </ListItemIcon>
-          <ListItemText primary="我的课程" />
-        </ListItemButton>
-      )}
+      <ListItemButton onClick={() => setPage(Page.MyCourse)}>
+        <ListItemIcon>
+          <LayersOutlinedIcon />
+        </ListItemIcon>
+        <ListItemText primary="我的课程" />
+      </ListItemButton>
 
       <ListItemButton onClick={() => setPage(Page.Notice)}>
         <ListItemIcon>
-          <LayersIcon />
+          <LibraryBooksOutlinedIcon />
         </ListItemIcon>
         <ListItemText primary="通知公告" />
       </ListItemButton>
 
       <ListItemButton onClick={() => setPage(Page.Topic)}>
         <ListItemIcon>
-          <LayersIcon />
+          <BubbleChartOutlinedIcon />
         </ListItemIcon>
         <ListItemText primary="评价反馈" />
       </ListItemButton>
 
-      {session?.user?.role == UserRole.USER && (
-        <ListItemButton onClick={() => setPage(Page.User)}>
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="职责变更" />
-        </ListItemButton>
-      )}
+      <ListItemButton onClick={() => setPage(Page.User)}>
+        <ListItemIcon>
+          <PersonAddAlt1OutlinedIcon />
+        </ListItemIcon>
+        <ListItemText primary="职责变更" />
+      </ListItemButton>
 
       {session?.user?.role == UserRole.ADMIN && (
         <ListItemButton onClick={() => setPage(Page.UserCheck)}>
           <ListItemIcon>
-            <PeopleIcon />
+            <PeopleAltOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="职责审核" />
         </ListItemButton>
@@ -70,9 +68,16 @@ const ListDashboardItems: React.FC<{
 
       <ListItemButton onClick={() => setPage(Page.Data)}>
         <ListItemIcon>
-          <BarChartIcon />
+          <InsertChartOutlinedIcon />
         </ListItemIcon>
         <ListItemText primary="统计数据" />
+      </ListItemButton>
+
+      <ListItemButton onClick={() => setPage(Page.Profile)}>
+        <ListItemIcon>
+          <AssignmentIndOutlinedIcon />
+        </ListItemIcon>
+        <ListItemText primary="个人资料" />
       </ListItemButton>
     </React.Fragment>
   );

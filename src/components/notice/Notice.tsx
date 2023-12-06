@@ -5,7 +5,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 import TextField from "@mui/material/TextField";
 
 import { api } from "@/utils/api";
@@ -68,7 +68,7 @@ const Notice: React.FC = () => {
                       }}
                     >
                       <ListItemIcon>
-                        <LibraryBooksIcon />
+                        <LibraryBooksOutlinedIcon />
                       </ListItemIcon>
                       <ListItemText primary={course.name} />
                     </ListItemButton>

@@ -41,6 +41,7 @@ import MyCourse from "./course/myCourse/MyCourse";
 
 import { UserRole, appConfig } from "../common/config";
 import { api } from "@/utils/api";
+import Profile from "./profile/Profile";
 
 const drawerWidth = 240;
 
@@ -104,6 +105,7 @@ export enum Page {
   Notice,
   Topic,
   Data,
+  Profile,
 }
 
 export default function Dashboard() {
@@ -280,7 +282,7 @@ export default function Dashboard() {
     } else if (page === Page.User) {
       return <User />;
     } else if (page === Page.UserCheck) {
-      return <UserCheck />;
+      return <UserCheck setPage={setPage} />;
     } else if (page === Page.CreateCourse) {
       return (
         <Checkout
@@ -294,6 +296,8 @@ export default function Dashboard() {
       return <Topic />;
     } else if (page === Page.Data) {
       return <Data />;
+    } else if (page === Page.Profile) {
+      return <Profile />;
     }
   };
 
@@ -337,7 +341,10 @@ export default function Dashboard() {
                   alignItems: "center",
                 }}
               >
-                <Avatar alt="User Avatar" src={session?.user.image ?? ""} />
+                <Avatar
+                  alt="User Avatar"
+                  src={session?.user.image ?? appConfig.DEFAULT_AVATAR}
+                />
                 <Typography>{session?.user.email ?? ""}</Typography>
                 <Button
                   variant="contained"

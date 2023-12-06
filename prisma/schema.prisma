@@ -191,9 +191,10 @@ model PaymentRecord {
 }
 
 model Topic {
-    id          String @id @default(cuid())
-    name        String
-    description String
+    id      String @id @default(cuid())
+    title   String
+    content String
+    grade   Int
 
     course   Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
     courseId String?
@@ -204,7 +205,7 @@ model Topic {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([name])
+    @@index([title])
 }
 
 model UserRoleChangeApplicantion {
