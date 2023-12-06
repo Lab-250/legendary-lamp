@@ -10,7 +10,6 @@ const Test = () => {
     createExecutor.mutate({
       name: "testname",
       status: "teststatus",
-      userId: "clnvzw8ny00c4vvbgva1db1ud",
     });
   };
 
