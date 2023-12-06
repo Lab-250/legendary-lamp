@@ -12,7 +12,7 @@ export const noticeRouter = createTRPCRouter({
     .query(({ ctx, input }) => {
       return ctx.db.notice.findMany({
         where: {
-          courseId: input.courseId,
+          ...input,
         },
       });
     }),
@@ -31,9 +31,7 @@ export const noticeRouter = createTRPCRouter({
       }
       return ctx.db.notice.create({
         data: {
-          title: input.title,
-          content: input.content,
-          courseId: input.courseId,
+          ...input,
           userId: ctx.session?.user.id,
         },
       });

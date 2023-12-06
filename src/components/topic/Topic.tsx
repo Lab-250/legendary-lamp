@@ -12,7 +12,7 @@ import Rating from "@mui/material/Rating";
 import { api } from "@/utils/api";
 import { UserRole } from "@/common/config";
 
-import { type Course, Notice } from "@prisma/client";
+import type { Course, Notice } from "@prisma/client";
 
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -23,6 +23,7 @@ const Topic: React.FC = () => {
 
   // api
   // course api
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: courses, refetch: refetchCourses } =
     api.course.getAll.useQuery();
 

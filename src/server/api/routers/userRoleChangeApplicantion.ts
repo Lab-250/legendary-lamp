@@ -3,37 +3,23 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 
 export const userRoleChangeApplicantionRouter = createTRPCRouter({
-  getAllByCourseId: publicProcedure
-    .input(
-      z.object({
-        courseId: z.string(),
-      }),
-    )
-    .query(({ ctx, input }) => {
-      return ctx.db.notice.findMany({
-        where: {
-          courseId: input.courseId,
-        },
-      });
-    }),
+  getAll: publicProcedure.query(({ ctx }) => {
+    return ctx.db.notice.findMany();
+  }),
 
   create: publicProcedure
     .input(
       z.object({
-        title: z.string(),
-        content: z.string(),
-        courseId: z.string(),
+        destType: z.string(),
       }),
     )
     .mutation(({ ctx, input }) => {
       if (!ctx.session) {
         return null;
       }
-      return ctx.db.notice.create({
+      return ctx.db.userRoleChangeApplicantion.create({
         data: {
-          title: input.title,
-          content: input.content,
-          courseId: input.courseId,
+          ...input,
           userId: ctx.session?.user.id,
         },
       });

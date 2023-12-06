@@ -22,6 +22,7 @@ const Notice: React.FC = () => {
 
   // api
   // course api
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: courses, refetch: refetchCourses } =
     api.course.getAll.useQuery();
 

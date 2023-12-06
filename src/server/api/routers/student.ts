@@ -7,25 +7,34 @@ import {
 } from "@/server/api/trpc";
 
 export const studentRouter = createTRPCRouter({
-  getById: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.db.user.findFirst({
-        where: {
-          id: input.id,
-        },
-      });
-    }),
-
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.db.student.findMany();
-  }),
-
-  create: protectedProcedure.mutation(({ ctx, input }) => {
-    return ctx.db.student.create({
-      data: {
-        ...input,
+  getStudentInCurrentSession: publicProcedure.query(({ ctx }) => {
+    return ctx.db.student.findFirst({
+      where: {
+        userId: ctx.session?.user.id,
+      },
+      include: {
+        course: true,
       },
     });
   }),
+
+  create: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        sex: z.string(),
+        checkTime: z.string(),
+        company: z.string(),
+        post: z.string(),
+        level: z.string(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.student.create({
+        data: {
+          ...input,
+          userId: ctx.session?.user.id,
+        },
+      });
+    }),
 });
