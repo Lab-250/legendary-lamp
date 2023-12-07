@@ -12,7 +12,7 @@ import Rating from "@mui/material/Rating";
 import { api } from "@/utils/api";
 import { UserRole } from "@/common/config";
 
-import type { Course, Notice } from "@prisma/client";
+import type { Course, Topic as TopicType } from "@prisma/client";
 
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -32,25 +32,27 @@ const Topic: React.FC = () => {
 
   // api
   // notice api
-  const { data: notices, refetch: refetchNotices } =
-    api.notice.getAllByCourseId.useQuery({
+  const { data: topics, refetch: refetchTopics } =
+    api.topic.getAllByCourseId.useQuery({
       courseId: course?.id ?? "",
     });
-  const createNotice = api.notice.create.useMutation({
+  const createTopic = api.topic.create.useMutation({
     onSuccess: () => {
-      void refetchNotices();
+      void refetchTopics();
     },
   });
 
   // state
-  const [notice, setNotice] = useState<{
+  const [topic, setTopic] = useState<{
     title: string | null;
     content: string | null;
     courseId: string | null;
+    grade: number | null;
   }>({
     title: null,
     content: null,
     courseId: null,
+    grade: null,
   });
   const [value, setValue] = useState<number | null>(5);
 
@@ -112,10 +114,10 @@ const Topic: React.FC = () => {
                     id="outlined-multiline-static"
                     label="评价标题"
                     rows={1}
-                    value={notice.title ?? ""}
+                    value={topic.title ?? ""}
                     onChange={(e) => {
-                      setNotice({
-                        ...notice,
+                      setTopic({
+                        ...topic,
                         title: e.target.value,
                       });
                     }}
@@ -136,16 +138,15 @@ const Topic: React.FC = () => {
                       }}
                     />
                   </Box>
-
                   <TextField
                     id="outlined-multiline-static"
                     label="评价内容"
                     multiline
                     rows={4}
-                    value={notice.content ?? ""}
+                    value={topic.content ?? ""}
                     onChange={(e) => {
-                      setNotice({
-                        ...notice,
+                      setTopic({
+                        ...topic,
                         content: e.target.value,
                       });
                     }}
@@ -154,16 +155,19 @@ const Topic: React.FC = () => {
                     <Button
                       variant="outlined"
                       onClick={() => {
-                        createNotice.mutate({
-                          title: notice?.title ?? "",
-                          content: notice?.content ?? "",
+                        createTopic.mutate({
+                          title: topic?.title ?? "",
+                          content: topic?.content ?? "",
+                          grade: value ?? 0,
                           courseId: course?.id ?? "",
                         });
-                        setNotice({
+                        setTopic({
                           title: null,
                           content: null,
+                          grade: null,
                           courseId: null,
                         });
+                        setValue(5);
                       }}
                     >
                       发送
@@ -190,16 +194,38 @@ const Topic: React.FC = () => {
                   gap: "20px",
                 }}
               >
-                <Typography variant="h6" gutterBottom component="div">
+                <Typography variant="h6">
                   {course?.name + " 课程评价"}
                 </Typography>
-                {notices?.map((notice: Notice) => {
+                {topics?.map((topic: TopicType) => {
                   return (
                     <Paper sx={{ p: 2 }}>
-                      <Typography variant="h5" gutterBottom>
-                        {notice?.title}
-                      </Typography>
-                      <Typography variant="body1">{notice?.content}</Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "10px",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: "10px",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Typography variant="h5">{topic?.title}</Typography>
+                          <Rating
+                            name="read-only"
+                            value={topic?.grade}
+                            readOnly
+                          />
+                        </Box>
+                        <Typography variant="body1">
+                          {topic?.content}
+                        </Typography>
+                      </Box>
                     </Paper>
                   );
                 })}

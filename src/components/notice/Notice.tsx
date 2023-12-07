@@ -5,13 +5,13 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
+import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
 import TextField from "@mui/material/TextField";
 
 import { api } from "@/utils/api";
 import { UserRole } from "@/common/config";
 
-import { type Course, Notice } from "@prisma/client";
+import type { Course, Notice as NoticeType } from "@prisma/client";
 
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -171,16 +171,24 @@ const Notice: React.FC = () => {
                   gap: "20px",
                 }}
               >
-                <Typography variant="h6" gutterBottom component="div">
+                <Typography variant="h6">
                   {course?.name + " 课程通知"}
                 </Typography>
-                {notices?.map((notice: Notice) => {
+                {notices?.map((notice: NoticeType) => {
                   return (
                     <Paper sx={{ p: 2 }}>
-                      <Typography variant="h5" gutterBottom>
-                        {notice?.title}
-                      </Typography>
-                      <Typography variant="body1">{notice?.content}</Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "10px",
+                        }}
+                      >
+                        <Typography variant="h5">{notice?.title}</Typography>
+                        <Typography variant="body1">
+                          {notice?.content}
+                        </Typography>
+                      </Box>
                     </Paper>
                   );
                 })}

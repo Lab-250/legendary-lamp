@@ -35,9 +35,9 @@ import User from "./user/User";
 import Copyright from "./Copyright";
 import Notice from "./notice/Notice";
 import Topic from "./topic/Topic";
-import UserCheck from "./user/userCheck/UserCheck";
+import UserCheck from "./userCheck/UserCheck";
 import Data from "./data/Data";
-import MyCourse from "./course/myCourse/MyCourse";
+import MyCourse from "./myCourse/MyCourse";
 
 import { UserRole, appConfig } from "../common/config";
 import { api } from "@/utils/api";

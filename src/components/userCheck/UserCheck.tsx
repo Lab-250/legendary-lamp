@@ -18,7 +18,9 @@ import { UserRole } from "@/common/config";
 import { api } from "@/utils/api";
 import { Page } from "@/components/Dashboard";
 
-const UserCheck = ({ setPage }) => {
+const UserCheck: React.FC<{
+  setPage: React.Dispatch<React.SetStateAction<Page>>;
+}> = ({ setPage }) => {
   // session
   const { data: session } = useSession();
   // router
