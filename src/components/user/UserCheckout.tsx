@@ -8,56 +8,32 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import CourseForm from "./CourseForm";
-import Review from "./Review";
-import { api } from "@/utils/api";
+import UserForm from "./UserForm";
+import Review from "./UserReview";
 
-import { type Course } from "@prisma/client";
+import { api } from "@/utils/api";
 import { Page } from "../Dashboard";
 
-const Checkout: React.FC<{
-  refetchCourses: any;
+const UserCheckout: React.FC<{
   setDataTableView: React.Dispatch<React.SetStateAction<Page>>;
-}> = ({ refetchCourses, setDataTableView }) => {
-  const createCourse = api.course.create.useMutation({
-    onSuccess: () => {
-      void refetchCourses();
-    },
-  });
-  const [course, setCourse] = React.useState<Course>({});
-  const [lecturerName, setLecturerName] = React.useState("");
-  const [executorName, setExecutorName] = React.useState("");
-
-  const steps = ["录入课程信息", "确认课程信息"];
+  type: string;
+}> = ({ setDataTableView, type }) => {
+  const steps = [`录入${type}信息`, `确认${type}信息`];
   function getStepContent(step: number) {
     switch (step) {
       case 0:
-        return (
-          <CourseForm
-            course={course}
-            setCourse={setCourse}
-            setLecturerName={setLecturerName}
-            setExecutorName={setExecutorName}
-          />
-        );
+        return <UserForm course={course} setCourse={setCourse} />;
       case 1:
-        return (
-          <Review
-            course={course}
-            lecturerName={lecturerName}
-            executorName={executorName}
-          />
-        );
+        return <Review course={course} />;
       default:
         throw new Error("Unknown step");
     }
   }
 
   const [activeStep, setActiveStep] = React.useState(0);
-
   const handleNext = () => {
     if (activeStep === steps.length) {
-      setDataTableView(Page.Dashboard);
+      setDataTableView(Page.User);
     } else {
       setActiveStep(activeStep + 1);
     }
@@ -75,7 +51,7 @@ const Checkout: React.FC<{
           sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
         >
           <Typography component="h1" variant="h4" align="center">
-            新建课程
+            {`申请职责变更为${type}`}
           </Typography>
           <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
             {steps.map((label) => (
@@ -87,9 +63,9 @@ const Checkout: React.FC<{
           {activeStep === steps.length ? (
             <React.Fragment>
               <Typography variant="h5" gutterBottom>
-                课程新建成功
+                申请成功
               </Typography>
-              <Typography variant="subtitle1">课程新建成功</Typography>
+              <Typography variant="subtitle1">申请成功</Typography>
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
                   variant="contained"
@@ -112,13 +88,7 @@ const Checkout: React.FC<{
                 <Button
                   variant="contained"
                   onClick={() => {
-                    if (activeStep === steps.length - 1) {
-                      createCourse.mutate({
-                        ...course,
-                        income: 0,
-                      });
-                      setCourse({});
-                    }
+                    // database
                     handleNext();
                   }}
                   sx={{ mt: 3, ml: 1 }}
@@ -134,4 +104,4 @@ const Checkout: React.FC<{
   );
 };
 
-export default Checkout;
+export default UserCheckout;

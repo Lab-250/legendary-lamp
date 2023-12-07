@@ -2,25 +2,20 @@ import * as React from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 import { type Course, type Executor, type Lecturer } from "@prisma/client";
 
 import DataTable from "@/components/course/DataTable";
-
 import { UserRole } from "@/common/config";
 import { api } from "@/utils/api";
-import { Page } from "@/components/Dashboard";
 
-const UserCheck: React.FC<{
-  setPage: React.Dispatch<React.SetStateAction<Page>>;
-}> = ({ setPage }) => {
+const UserCheck: React.FC = () => {
   // session
   const { data: session } = useSession();
   // router
@@ -61,45 +56,20 @@ const UserCheck: React.FC<{
             }}
           >
             <Stack direction="row" spacing={2}>
-              {session?.user?.role == UserRole.ADMIN && (
-                <Button
-                  variant="outlined"
-                  startIcon={<AddCircleOutlineOutlinedIcon />}
-                  onClick={() => {
-                    setPage(Page.CreateCourse);
-                  }}
-                >
-                  新建课程
-                </Button>
-              )}
-              {session?.user?.role == UserRole.STUDENT && (
-                <Button
-                  variant="outlined"
-                  startIcon={<BookmarkAddOutlinedIcon />}
-                  onClick={() => {}}
-                >
-                  申请选课
-                </Button>
-              )}
-              {session?.user?.role == UserRole.ADMIN && (
-                <Button
-                  variant="outlined"
-                  startIcon={<DeleteOutlineOutlinedIcon />}
-                  onClick={() => {
-                    deleteCourse.mutate({
-                      ids:
-                        courses
-                          ?.filter(
-                            (e: Course, i: number) =>
-                              selectionModel?.includes(i + 1),
-                          )
-                          .map((e: Course) => e.id) ?? [],
-                    });
-                  }}
-                >
-                  删除课程
-                </Button>
-              )}
+              <Button
+                variant="outlined"
+                color="success"
+                startIcon={<CheckOutlinedIcon />}
+              >
+                同意变更
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                startIcon={<CloseOutlinedIcon />}
+              >
+                拒绝变更
+              </Button>
             </Stack>
           </Paper>
         </Grid>

@@ -106,6 +106,9 @@ export enum Page {
   Topic,
   Data,
   Profile,
+  CreateStudent,
+  CreateLecturer,
+  CreateExecutor,
 }
 
 export default function Dashboard() {
@@ -280,9 +283,9 @@ export default function Dashboard() {
     } else if (page === Page.MyCourse) {
       return <MyCourse />;
     } else if (page === Page.User) {
-      return <User />;
+      return <User setPage={setPage} />;
     } else if (page === Page.UserCheck) {
-      return <UserCheck setPage={setPage} />;
+      return <UserCheck />;
     } else if (page === Page.CreateCourse) {
       return (
         <Checkout
@@ -297,6 +300,12 @@ export default function Dashboard() {
     } else if (page === Page.Data) {
       return <Data />;
     } else if (page === Page.Profile) {
+      return <Profile />;
+    } else if (page === Page.CreateStudent) {
+      return <Profile />;
+    } else if (page === Page.CreateLecturer) {
+      return <Profile />;
+    } else if (page === Page.CreateExecutor) {
       return <Profile />;
     }
   };

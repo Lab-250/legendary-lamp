@@ -7,41 +7,23 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 
-import { type Course } from "@prisma/client";
+import type { Lecturer, Course, Executor } from "@prisma/client";
+import { api } from "@/utils/api";
+import { set } from "zod";
 
 const CourseForm: React.FC<{
   course: Course;
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
-}> = ({ course, setCourse }) => {
-  const [lecturer, setLecturer] = React.useState([
-    {
-      id: "1",
-      name: "11",
-    },
-  ]);
-  const [executor, setExecutor] = React.useState([
-    {
-      id: "1",
-      name: "11",
-    },
-  ]);
-  React.useEffect(() => {
-    // TODO: database lecturer
-    const lecturerData = [
-      { id: "1", name: "测试1" },
-      { id: "2", name: "222" },
-      { id: "3", name: "333" },
-    ];
-    setLecturer(lecturerData);
-    // TODO: database executor
-    const executorData = [
-      { id: "1", name: "测试1" },
-      { id: "2", name: "222" },
-      { id: "3", name: "333" },
-      { id: "4", name: "444" },
-    ];
-    setExecutor(executorData);
-  }, []);
+  setLecturerName: React.Dispatch<React.SetStateAction<string>>;
+  setExecutorName: React.Dispatch<React.SetStateAction<string>>;
+}> = ({
+  course,
+  setCourse,
+  setLecturerName,
+  setExecutorName,
+}) => {
+  const { data: lecturer } = api.lecturer.getAll.useQuery();
+  const { data: executor } = api.executor.getAll.useQuery();
 
   const handleInputChange = (value: string | number, filedName: string) => {
     setCourse({
@@ -49,6 +31,9 @@ const CourseForm: React.FC<{
       [filedName]: value,
     });
   };
+
+  const [lecturerIndex, setLecturerIndex] = React.useState<number | null>(null);
+  const [executorIndex, setExecutorIndex] = React.useState<number | null>(null);
 
   return (
     <React.Fragment>
@@ -108,17 +93,26 @@ const CourseForm: React.FC<{
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
-            <InputLabel id="lecturer-label">授课人</InputLabel>
+            <InputLabel id="lecturer-label">讲师</InputLabel>
             <Select
               labelId="lecturer-label"
               id="lecturer"
               name="lecturer"
-              onChange={(e) => handleInputChange(e.target.value, "lecturerId")}
-              value={course?.lecturerId ?? ""}
+              onChange={(e) => {
+                handleInputChange(
+                  lecturer?.at(Number(e.target.value))?.id ?? "",
+                  "lecturerId",
+                );
+                setLecturerName(
+                  lecturer?.at(Number(e.target.value))?.name ?? "",
+                );
+                setLecturerIndex(Number(e.target.value));
+              }}
+              value={lecturerIndex}
               variant="standard"
             >
-              {lecturer.map((item, index) => (
-                <MenuItem key={index} value={item.id}>
+              {lecturer?.map((item: Lecturer, index: number) => (
+                <MenuItem key={index} value={index}>
                   {item.name}
                 </MenuItem>
               ))}
@@ -132,12 +126,21 @@ const CourseForm: React.FC<{
               labelId="executor-label"
               id="executor"
               name="executor"
-              onChange={(e) => handleInputChange(e.target.value, "executorId")}
-              value={course?.executorId ?? ""}
+              onChange={(e) => {
+                handleInputChange(
+                  executor?.at(Number(e.target.value))?.id ?? "",
+                  "executorId",
+                );
+                setExecutorName(
+                  executor?.at(Number(e.target.value))?.name ?? "",
+                );
+                setExecutorIndex(Number(e.target.value));
+              }}
+              value={executorIndex}
               variant="standard"
             >
-              {executor.map((item, index) => (
-                <MenuItem key={index} value={item.id}>
+              {executor?.map((item: Executor, index: number) => (
+                <MenuItem key={index} value={index}>
                   {item.name}
                 </MenuItem>
               ))}

@@ -3,12 +3,12 @@ import { useSession } from "next-auth/react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
-import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined';
-import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined';
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import InsertChartOutlinedIcon from "@mui/icons-material/InsertChartOutlined";
+import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import BubbleChartOutlinedIcon from "@mui/icons-material/BubbleChartOutlined";
-import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
+import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 
@@ -33,7 +33,7 @@ const ListDashboardItems: React.FC<{
         <ListItemIcon>
           <LayersOutlinedIcon />
         </ListItemIcon>
-        <ListItemText primary="我的课程" />
+        <ListItemText primary="我的课程stu+lec+exe" />
       </ListItemButton>
 
       <ListItemButton onClick={() => setPage(Page.Notice)}>
@@ -54,7 +54,7 @@ const ListDashboardItems: React.FC<{
         <ListItemIcon>
           <PersonAddAlt1OutlinedIcon />
         </ListItemIcon>
-        <ListItemText primary="职责变更" />
+        <ListItemText primary="职责变更user" />
       </ListItemButton>
 
       {session?.user?.role == UserRole.ADMIN && (
