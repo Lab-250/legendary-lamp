@@ -78,12 +78,12 @@ model VerificationToken {
 }
 
 model Course {
-    id     String  @id @default(cuid())
+    id     String   @id @default(cuid())
     name   String
     time   String
     place  String
     price  Decimal
-    income Decimal
+    income Decimal?
 
     lecturer   Lecturer? @relation(fields: [lecturerId], references: [id], onDelete: Cascade)
     lecturerId String?
@@ -103,10 +103,10 @@ model Course {
 }
 
 model Lecturer {
-    id         String @id @default(cuid())
-    name       String
-    profession String
-    field      String
+    id         String  @id @default(cuid())
+    name       String?
+    profession String?
+    field      String?
 
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String @unique
@@ -120,9 +120,9 @@ model Lecturer {
 }
 
 model Executor {
-    id     String @id @default(cuid())
-    name   String
-    status String
+    id     String  @id @default(cuid())
+    name   String?
+    status String?
 
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String @unique
@@ -136,13 +136,13 @@ model Executor {
 }
 
 model Student {
-    id        String @id @default(cuid())
-    name      String
-    sex       String
-    checkTime String
-    company   String
-    post      String
-    level     String
+    id        String  @id @default(cuid())
+    name      String?
+    sex       String?
+    checkTime String?
+    company   String?
+    post      String?
+    level     String?
 
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String @unique
@@ -175,11 +175,11 @@ model Notice {
 }
 
 model CourseRecord {
-    id        String   @id @default(cuid())
-    payTime   DateTime
-    payAmount Decimal
-    payed     Boolean
-    signed    Boolean
+    id        String    @id @default(cuid())
+    payTime   DateTime?
+    payAmount Decimal?
+    payed     Boolean?
+    signed    Boolean?
 
     student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
     studentId String?

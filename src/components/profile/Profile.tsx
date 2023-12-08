@@ -45,7 +45,7 @@ const Profile = () => {
             }}
           >
             <Typography gutterBottom>{`用户名：${
-              userData?.name ?? "TA还没有名字哦"
+              userData?.name ?? "TA还没有名字喵QAQ"
             }`}</Typography>
 
             <Typography gutterBottom>{`用户职责：${getRoleName(
@@ -70,7 +70,7 @@ const Profile = () => {
             </Box>
 
             <Typography gutterBottom>{`用户电话号码：${
-              userData?.phone ?? "TA还没有电话号码哦"
+              userData?.phone ?? "TA还没有电话号码喵QAQ"
             }`}</Typography>
 
             <Box

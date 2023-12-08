@@ -9,28 +9,30 @@ import Stack from "@mui/material/Stack";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
-import { type Course, type Executor, type Lecturer } from "@prisma/client";
+import type { User, UserRoleChangeApplicantion } from "@prisma/client";
 
 import DataTable from "@/components/course/DataTable";
 import { UserRole } from "@/common/config";
 import { api } from "@/utils/api";
+import { getRoleName } from "@/utils/role";
 
 const UserCheck: React.FC = () => {
   // session
   const { data: session } = useSession();
-  // router
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const router = useRouter();
 
   // api
   // course api
-  const { data: courses, refetch: refetchCourses } =
-    api.course.getAll.useQuery();
-  const deleteCourse = api.course.deleteByIds.useMutation({
-    onSuccess: () => {
-      void refetchCourses();
-    },
-  });
+  const {
+    data: userRoleChangeApplicantion,
+    refetch: refetchUserRoleChangeApplicantion,
+  } = api.userRoleChangeApplicantion.getAll.useQuery();
+  const deleteUserRoleChangeApplicantions =
+    api.userRoleChangeApplicantion.deleteByIds.useMutation({
+      onSuccess: () => {
+        void refetchUserRoleChangeApplicantion();
+      },
+    });
+  const createDestRole = api.user.createDestRole.useMutation();
 
   // state
   const [selectionModel, setSelectionModel] = React.useState<number[] | null>(
@@ -39,8 +41,7 @@ const UserCheck: React.FC = () => {
 
   return (
     <Grid container spacing={3}>
-      {(session?.user?.role == UserRole.ADMIN ||
-        session?.user?.role == UserRole.STUDENT) && (
+      {session?.user?.role == UserRole.ADMIN && (
         <Grid item xs={12}>
           <Paper
             sx={{
@@ -54,6 +55,27 @@ const UserCheck: React.FC = () => {
                 variant="outlined"
                 color="success"
                 startIcon={<CheckOutlinedIcon />}
+                onClick={() => {
+                  if (selectionModel) {
+                    createDestRole.mutate(
+                      selectionModel.map((e: number) => {
+                        return {
+                          userId:
+                            userRoleChangeApplicantion?.at(e - 1)?.id ?? "",
+                          destType:
+                            userRoleChangeApplicantion?.at(e - 1)?.destType ??
+                            "",
+                        };
+                      }),
+                    );
+                    deleteUserRoleChangeApplicantions.mutate({
+                      ids: selectionModel.map(
+                        (e) => userRoleChangeApplicantion?.at(e - 1)?.id ?? "",
+                      ),
+                    });
+                    setSelectionModel(null);
+                  }
+                }}
               >
                 同意变更
               </Button>
@@ -61,6 +83,16 @@ const UserCheck: React.FC = () => {
                 variant="outlined"
                 color="error"
                 startIcon={<CloseOutlinedIcon />}
+                onClick={() => {
+                  if (selectionModel) {
+                    deleteUserRoleChangeApplicantions.mutate({
+                      ids: selectionModel.map(
+                        (e) => userRoleChangeApplicantion?.at(e - 1)?.id ?? "",
+                      ),
+                    });
+                    setSelectionModel(null);
+                  }
+                }}
               >
                 拒绝变更
               </Button>
@@ -72,22 +104,19 @@ const UserCheck: React.FC = () => {
         <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
           <DataTable
             rows={
-              courses?.map(
+              userRoleChangeApplicantion?.map(
                 (
-                  item: Course & {
-                    executor: Executor | null;
-                    lecturer: Lecturer | null;
+                  item: UserRoleChangeApplicantion & {
+                    user: User;
                   },
                   index: number,
                 ) => ({
                   id: index + 1,
-                  time: item.time,
-                  name: item.name,
-                  price: item.price,
-                  place: item.place,
-                  income: item.income,
-                  executor: item.executor?.name,
-                  lecturer: item.lecturer?.name,
+                  name: item.user.name,
+                  email: item.user.email,
+                  phone: item.user.phone,
+                  role: getRoleName(item.user.role ?? null),
+                  destType: getRoleName(item.destType ?? null),
                 }),
               ) ?? {}
             }
@@ -101,44 +130,36 @@ const UserCheck: React.FC = () => {
               },
               {
                 field: "name",
-                headerName: "名称",
+                headerName: "用户名称",
+                width: 200,
+                align: "center",
+                headerAlign: "center",
+              },
+              {
+                field: "email",
+                headerName: "用户邮箱",
                 width: 220,
                 align: "center",
                 headerAlign: "center",
               },
               {
-                field: "time",
-                headerName: "时间",
-                width: 180,
+                field: "phone",
+                headerName: "用户手机号",
+                width: 220,
                 align: "center",
                 headerAlign: "center",
               },
               {
-                field: "place",
-                headerName: "地点",
-                width: 270,
+                field: "role",
+                headerName: "当前职责",
+                width: 160,
                 align: "center",
                 headerAlign: "center",
               },
               {
-                field: "price",
-                headerName: "价格",
-                type: "number",
-                width: 100,
-                align: "center",
-                headerAlign: "center",
-              },
-              {
-                field: "executor",
-                headerName: "执行人",
-                width: 100,
-                align: "center",
-                headerAlign: "center",
-              },
-              {
-                field: "lecturer",
-                headerName: "讲师",
-                width: 100,
+                field: "destType",
+                headerName: "变更职责目标",
+                width: 160,
                 align: "center",
                 headerAlign: "center",
               },

@@ -3,12 +3,12 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   publicProcedure,
-  protectedProcedure,
+  adminProcedure,
 } from "@/server/api/trpc";
 
 export const studentRouter = createTRPCRouter({
   get: publicProcedure.query(({ ctx }) => {
-    return ctx.db.student.findFirst({
+    return ctx.db.student.findUnique({
       where: {
         userId: ctx.session?.user.id,
       },
@@ -18,23 +18,23 @@ export const studentRouter = createTRPCRouter({
     });
   }),
 
-  create: protectedProcedure
+  createMany: adminProcedure
     .input(
-      z.object({
-        name: z.string(),
-        sex: z.string(),
-        checkTime: z.string(),
-        company: z.string(),
-        post: z.string(),
-        level: z.string(),
-      }),
+      z.array(
+        z.object({
+          userId: z.string(),
+          name: z.string().optional(),
+          sex: z.string().optional(),
+          checkTime: z.string().optional(),
+          company: z.string().optional(),
+          post: z.string().optional(),
+          level: z.string().optional(),
+        }),
+      ),
     )
     .mutation(({ ctx, input }) => {
-      return ctx.db.student.create({
-        data: {
-          ...input,
-          userId: ctx.session?.user.id,
-        },
+      return ctx.db.student.createMany({
+        data: input,
       });
     }),
 });

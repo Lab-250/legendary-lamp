@@ -5,6 +5,7 @@ import {
   createTRPCRouter,
   publicProcedure,
 } from "@/server/api/trpc";
+import { UserRole } from "@/common/config";
 
 export const userRouter = createTRPCRouter({
   get: publicProcedure.query(({ ctx }) => {
@@ -38,6 +39,7 @@ export const userRouter = createTRPCRouter({
         image: z.string().optional(),
         email: z.string().optional(),
         phone: z.string().optional(),
+        role: z.string().optional(),
       }),
     )
     .mutation(({ ctx, input }) => {
@@ -48,6 +50,39 @@ export const userRouter = createTRPCRouter({
         data: {
           ...input,
         },
+      });
+    }),
+
+  createDestRole: adminProcedure
+    .input(
+      z.array(
+        z.object({
+          userId: z.string(),
+          destType: z.string(),
+        }),
+      ),
+    )
+    .mutation(({ ctx, input }) => {
+      input.forEach((item) => {
+        if (item.destType === UserRole.STUDENT) {
+          return ctx.db.student.create({
+            data: {
+              userId: item.userId,
+            },
+          });
+        } else if (item.destType === UserRole.LECTURER) {
+          return ctx.db.lecturer.create({
+            data: {
+              userId: item.userId,
+            },
+          });
+        } else if (item.destType === UserRole.EXCUTOR) {
+          return ctx.db.executor.create({
+            data: {
+              userId: item.userId,
+            },
+          });
+        }
       });
     }),
 });
