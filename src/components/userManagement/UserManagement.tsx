@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -9,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
-import { type User, type Executor, type Lecturer } from "@prisma/client";
+import type { User } from "@prisma/client";
 
 import DataTable from "@/components/course/DataTable";
 import { UserRole } from "@/common/config";

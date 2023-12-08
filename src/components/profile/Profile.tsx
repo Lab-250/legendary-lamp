@@ -38,9 +38,9 @@ const Profile = () => {
               gap: "40px",
             }}
           >
-            <Typography
-              gutterBottom
-            >{`用户名：${session?.user.name}`}</Typography>
+            <Typography gutterBottom>{`用户名：${
+              session?.user.name ?? "TA还没有名字哦"
+            }`}</Typography>
 
             <Typography gutterBottom>{`用户职责：${getRoleName(
               session?.user.role ?? null,
@@ -63,9 +63,9 @@ const Profile = () => {
               />
             </Box>
 
-            <Typography
-              gutterBottom
-            >{`用户电话号码：${userData?.phone}`}</Typography>
+            <Typography gutterBottom>{`用户电话号码：${
+              userData?.phone ?? "TA还没有电话号码哦"
+            }`}</Typography>
 
             <Box
               sx={{
