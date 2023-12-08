@@ -11,14 +11,20 @@ import { UserRole, appConfig } from "@/common/config";
 import type { User } from "@prisma/client";
 import { api } from "@/utils/api";
 import { getRoleName } from "@/utils/role";
+import { set } from "zod";
 
 const Profile = () => {
   // session
   const { data: session } = useSession();
 
-  const [user, setUser] = React.useState<User | null>(null);
+  const [user, setUser] = React.useState<Partial<User>>();
 
   const { data: userData, refetch: refetchUserData } = api.user.get.useQuery();
+  const { mutate: updateUser } = api.user.update.useMutation({
+    onSuccess: () => {
+      refetchUserData();
+    },
+  });
 
   return (
     <Grid container spacing={3}>
@@ -39,15 +45,15 @@ const Profile = () => {
             }}
           >
             <Typography gutterBottom>{`用户名：${
-              session?.user.name ?? "TA还没有名字哦"
+              userData?.name ?? "TA还没有名字哦"
             }`}</Typography>
 
             <Typography gutterBottom>{`用户职责：${getRoleName(
-              session?.user.role ?? null,
+              userData?.role ?? null,
             )}`}</Typography>
             <Typography
               gutterBottom
-            >{`用户邮箱：${session?.user.email}`}</Typography>
+            >{`用户邮箱：${userData?.email}`}</Typography>
             <Box
               sx={{
                 display: "flex",
@@ -59,7 +65,7 @@ const Profile = () => {
               <Typography gutterBottom>{`用户头像：`}</Typography>
               <Avatar
                 alt="User Avatar"
-                src={session?.user.image ?? appConfig.DEFAULT_AVATAR}
+                src={userData?.image ?? appConfig.DEFAULT_AVATAR}
               />
             </Box>
 
@@ -88,7 +94,17 @@ const Profile = () => {
                 label="用户名"
                 variant="standard"
               />
-              <Button variant="outlined" onClick={() => {}}>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  if (user?.name) {
+                    updateUser({
+                      name: user?.name,
+                    });
+                    setUser({});
+                  }
+                }}
+              >
                 更改用户名
               </Button>
             </Box>
@@ -106,14 +122,24 @@ const Profile = () => {
                 onChange={(e) => {
                   setUser({
                     ...user,
-                    email: e.target.value,
+                    email: e.target.value ?? "",
                   });
                 }}
-                value={user?.name ?? ""}
+                value={user?.email ?? ""}
                 label="用户邮箱"
                 variant="standard"
               />
-              <Button variant="outlined" onClick={() => {}}>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  if (user?.email) {
+                    updateUser({
+                      email: user?.email,
+                    });
+                    setUser({});
+                  }
+                }}
+              >
                 更改用户邮箱
               </Button>
             </Box>
@@ -134,11 +160,21 @@ const Profile = () => {
                     image: e.target.value,
                   });
                 }}
-                value={user?.name ?? ""}
+                value={user?.image ?? ""}
                 label="用户头像链接"
                 variant="standard"
               />
-              <Button variant="outlined" onClick={() => {}}>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  if (user?.image) {
+                    updateUser({
+                      image: user?.image,
+                    });
+                    setUser({});
+                  }
+                }}
+              >
                 更改用户头像
               </Button>
             </Box>
@@ -159,11 +195,21 @@ const Profile = () => {
                     phone: e.target.value,
                   });
                 }}
-                value={user?.name ?? ""}
+                value={user?.phone ?? ""}
                 label="用户电话号码"
                 variant="standard"
               />
-              <Button variant="outlined" onClick={() => {}}>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  if (user?.phone) {
+                    updateUser({
+                      phone: user?.phone,
+                    });
+                    setUser({});
+                  }
+                }}
+              >
                 更改用户电话号码
               </Button>
             </Box>

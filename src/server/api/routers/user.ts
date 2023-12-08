@@ -30,4 +30,24 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
+  update: publicProcedure
+    .input(
+      z.object({
+        name: z.string().optional(),
+        image: z.string().optional(),
+        email: z.string().optional(),
+        phone: z.string().optional(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.user.update({
+        where: {
+          id: ctx.session?.user.id,
+        },
+        data: {
+          ...input,
+        },
+      });
+    }),
 });

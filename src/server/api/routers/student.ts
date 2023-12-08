@@ -7,7 +7,7 @@ import {
 } from "@/server/api/trpc";
 
 export const studentRouter = createTRPCRouter({
-  getStudentInCurrentSession: publicProcedure.query(({ ctx }) => {
+  get: publicProcedure.query(({ ctx }) => {
     return ctx.db.student.findFirst({
       where: {
         userId: ctx.session?.user.id,
