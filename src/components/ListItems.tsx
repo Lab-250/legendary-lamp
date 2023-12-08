@@ -11,6 +11,7 @@ import BubbleChartOutlinedIcon from "@mui/icons-material/BubbleChartOutlined";
 import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
+import PersonSearchOutlinedIcon from "@mui/icons-material/PersonSearchOutlined";
 
 import { Page } from "./Dashboard";
 import { UserRole } from "@/common/config";
@@ -33,7 +34,7 @@ const ListDashboardItems: React.FC<{
         <ListItemIcon>
           <LayersOutlinedIcon />
         </ListItemIcon>
-        <ListItemText primary="我的课程stu+lec+exe" />
+        <ListItemText primary="我的课程" />
       </ListItemButton>
 
       <ListItemButton onClick={() => setPage(Page.Notice)}>
@@ -54,7 +55,7 @@ const ListDashboardItems: React.FC<{
         <ListItemIcon>
           <PersonAddAlt1OutlinedIcon />
         </ListItemIcon>
-        <ListItemText primary="职责变更user" />
+        <ListItemText primary="职责变更" />
       </ListItemButton>
 
       {session?.user?.role == UserRole.ADMIN && (
@@ -71,6 +72,13 @@ const ListDashboardItems: React.FC<{
           <InsertChartOutlinedIcon />
         </ListItemIcon>
         <ListItemText primary="统计数据" />
+      </ListItemButton>
+
+      <ListItemButton onClick={() => setPage(Page.Profile)}>
+        <ListItemIcon>
+          <PersonSearchOutlinedIcon />
+        </ListItemIcon>
+        <ListItemText primary="人员管理" />
       </ListItemButton>
 
       <ListItemButton onClick={() => setPage(Page.Profile)}>
