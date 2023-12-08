@@ -6,7 +6,7 @@ import { lecturerRouter } from "./routers/lecturer";
 import { noticeRouter } from "./routers/notice";
 import { userRoleChangeApplicantionRouter } from "./routers/userRoleChangeApplicantion";
 import { topicRouter } from "./routers/topic";
-import { paymentRecordRouter } from "./routers/paymentRecord";
+import { courseRecordRouter } from "./routers/courseRecord";
 import { studentRouter } from "./routers/student";
 import { userRouter } from "./routers/user";
 
@@ -21,7 +21,7 @@ export const appRouter = createTRPCRouter({
   executor: executorRouter,
   lecturer: lecturerRouter,
   notice: noticeRouter,
-  paymentRecord: paymentRecordRouter,
+  courseRecord: courseRecordRouter,
   student: studentRouter,
   topic: topicRouter,
   userRoleChangeApplicantion: userRoleChangeApplicantionRouter,
