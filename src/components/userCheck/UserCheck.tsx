@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -21,7 +20,6 @@ const UserCheck: React.FC = () => {
   const { data: session } = useSession();
 
   // api
-  // course api
   const {
     data: userRoleChangeApplicantion,
     refetch: refetchUserRoleChangeApplicantion,
@@ -32,7 +30,11 @@ const UserCheck: React.FC = () => {
         void refetchUserRoleChangeApplicantion();
       },
     });
-  const createDestRole = api.user.createDestRole.useMutation();
+  const createDestRole = api.user.createDestRole.useMutation({
+    onSuccess: () => {
+      void refetchUserRoleChangeApplicantion();
+    },
+  });
 
   // state
   const [selectionModel, setSelectionModel] = React.useState<number[] | null>(
@@ -57,22 +59,16 @@ const UserCheck: React.FC = () => {
                 startIcon={<CheckOutlinedIcon />}
                 onClick={() => {
                   if (selectionModel) {
-                    createDestRole.mutate(
-                      selectionModel.map((e: number) => {
-                        return {
-                          userId:
-                            userRoleChangeApplicantion?.at(e - 1)?.id ?? "",
-                          destType:
-                            userRoleChangeApplicantion?.at(e - 1)?.destType ??
-                            "",
-                        };
-                      }),
-                    );
-                    deleteUserRoleChangeApplicantions.mutate({
-                      ids: selectionModel.map(
-                        (e) => userRoleChangeApplicantion?.at(e - 1)?.id ?? "",
-                      ),
-                    });
+                    for (const e of selectionModel) {
+                      createDestRole.mutate({
+                        applicantId:
+                          userRoleChangeApplicantion?.at(e - 1)?.id ?? "",
+                        userId:
+                          userRoleChangeApplicantion?.at(e - 1)?.userId ?? "",
+                        destType:
+                          userRoleChangeApplicantion?.at(e - 1)?.destType ?? "",
+                      });
+                    }
                     setSelectionModel(null);
                   }
                 }}

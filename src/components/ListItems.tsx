@@ -31,7 +31,7 @@ const ListDashboardItems: React.FC<{
       </ListItemButton>
 
       {(session?.user?.role == UserRole.STUDENT ||
-        session?.user?.role == UserRole.EXCUTOR ||
+        session?.user?.role == UserRole.EXECUTOR ||
         session?.user?.role == UserRole.LECTURER) && (
         <ListItemButton onClick={() => setPage(Page.MyCourse)}>
           <ListItemIcon>
@@ -74,7 +74,7 @@ const ListDashboardItems: React.FC<{
       )}
 
       {(session?.user?.role == UserRole.ADMIN ||
-        session?.user?.role == UserRole.EXCUTOR) && (
+        session?.user?.role == UserRole.EXECUTOR) && (
         <ListItemButton onClick={() => setPage(Page.Data)}>
           <ListItemIcon>
             <InsertChartOutlinedIcon />

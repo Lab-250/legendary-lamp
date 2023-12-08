@@ -151,7 +151,7 @@ export const lecturerProcedure = protectedProcedure.use(
   enfoceUserRole(UserRole.LECTURER),
 );
 export const excutorProcedure = protectedProcedure.use(
-  enfoceUserRole(UserRole.EXCUTOR),
+  enfoceUserRole(UserRole.EXECUTOR),
 );
 export const studentProcedure = protectedProcedure.use(
   enfoceUserRole(UserRole.STUDENT),

@@ -83,7 +83,7 @@ const Notice: React.FC = () => {
       <Grid item xs={9} spacing={3}>
         <Grid container spacing={3}>
           {(session?.user?.role == UserRole.ADMIN ||
-            session?.user?.role == UserRole.EXCUTOR) && (
+            session?.user?.role == UserRole.EXECUTOR) && (
             <Grid item xs={12} alignItems="flex-start" spacing={3}>
               <Paper
                 sx={{

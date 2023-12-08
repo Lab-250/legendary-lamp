@@ -1,3 +1,5 @@
+import { env } from "@/env.mjs";
+
 export const appConfig = {
   APP_TITLE: "浩奇培训信息管理系统",
   DEFAULT_AVATAR:
@@ -8,6 +10,6 @@ export enum UserRole {
   ADMIN = "ADMIN",
   USER = "USER",
   LECTURER = "LECTURER",
-  EXCUTOR = "EXCUTOR",
+  EXECUTOR = "EXECUTOR",
   STUDENT = "STUDENT",
 }

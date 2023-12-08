@@ -73,7 +73,7 @@ const User: React.FC<{
                   onClick={() => {
                     //setPage(Page.CreateExecutor);
                     createUserRoleChangeApplication.mutate({
-                      destType: UserRole.EXCUTOR.toString(),
+                      destType: UserRole.EXECUTOR.toString(),
                     });
                   }}
                 >

@@ -55,34 +55,48 @@ export const userRouter = createTRPCRouter({
 
   createDestRole: adminProcedure
     .input(
-      z.array(
-        z.object({
-          userId: z.string(),
-          destType: z.string(),
-        }),
-      ),
+      z.object({
+        applicantId: z.string(),
+        userId: z.string(),
+        destType: z.string(),
+      }),
     )
-    .mutation(({ ctx, input }) => {
-      input.forEach((item) => {
-        if (item.destType === UserRole.STUDENT) {
-          return ctx.db.student.create({
-            data: {
-              userId: item.userId,
-            },
-          });
-        } else if (item.destType === UserRole.LECTURER) {
-          return ctx.db.lecturer.create({
-            data: {
-              userId: item.userId,
-            },
-          });
-        } else if (item.destType === UserRole.EXCUTOR) {
-          return ctx.db.executor.create({
-            data: {
-              userId: item.userId,
-            },
-          });
-        }
+    .mutation(async ({ ctx, input }) => {
+      const { userId, destType } = input;
+      if (
+        destType !== UserRole.STUDENT &&
+        destType !== UserRole.LECTURER &&
+        destType !== UserRole.EXECUTOR
+      ) {
+        return { success: false, message: "Invalid role" };
+      }
+      const user = await ctx.db.user.findUnique({
+        where: {
+          id: userId,
+        },
       });
+      // 开启一个事务
+      // 1. 更新用户角色
+      // 2. 创建对应角色的记录
+      // 3. 删除申请记录
+      await ctx.db.$transaction([
+        ctx.db.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            role: destType,
+          },
+        }),
+        destType === UserRole.STUDENT
+          ? ctx.db.student.create({ data: { userId, name: user?.name } })
+          : destType === UserRole.LECTURER
+            ? ctx.db.lecturer.create({ data: { userId, name: user?.name } })
+            : ctx.db.executor.create({ data: { userId, name: user?.name } }),
+        ctx.db.userRoleChangeApplicantion.delete({
+          where: { id: input.applicantId },
+        }),
+      ]);
+      return { success: true };
     }),
 });

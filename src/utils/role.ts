@@ -6,7 +6,7 @@ export const getRoleName = (role: UserRole | string | null) => {
       return "学生";
     case UserRole.LECTURER:
       return "讲师";
-    case UserRole.EXCUTOR:
+    case UserRole.EXECUTOR:
       return "执行人";
     case UserRole.ADMIN:
       return "经理";
