@@ -67,6 +67,7 @@ const UserManagement: React.FC = () => {
                         )
                         .map((e: User) => e.id) ?? [],
                   });
+                  setSelectionModel(null);
                 }}
               >
                 删除用户
