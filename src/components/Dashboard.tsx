@@ -17,6 +17,7 @@ import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -27,7 +28,7 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { Avatar } from "@mui/material";
 
-import { type Course, type Executor, type Lecturer } from "@prisma/client";
+import type { Course, Executor, Lecturer } from "@prisma/client";
 
 import DataTable from "./course/DataTable";
 import Checkout from "./course/Checkout";
@@ -42,13 +43,12 @@ import MyCourse from "./myCourse/MyCourse";
 import { UserRole, appConfig } from "../common/config";
 import { api } from "@/utils/api";
 import Profile from "./profile/Profile";
+import UserManagement from "./userManagement/UserManagement";
 
 const drawerWidth = 240;
-
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
-
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })<AppBarProps>(({ theme, open }) => ({
@@ -66,7 +66,6 @@ const AppBar = styled(MuiAppBar, {
     }),
   }),
 }));
-
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -92,7 +91,6 @@ const Drawer = styled(MuiDrawer, {
     }),
   },
 }));
-
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
@@ -109,6 +107,7 @@ export enum Page {
   CreateStudent,
   CreateLecturer,
   CreateExecutor,
+  UserManagement,
 }
 
 export default function Dashboard() {
@@ -167,13 +166,22 @@ export default function Dashboard() {
                       新建课程
                     </Button>
                   )}
+                  {session?.user?.role == UserRole.ADMIN && (
+                    <Button
+                      variant="outlined"
+                      startIcon={<EditOutlinedIcon />}
+                      onClick={() => {}}
+                    >
+                      修改课程
+                    </Button>
+                  )}
                   {session?.user?.role == UserRole.STUDENT && (
                     <Button
                       variant="outlined"
                       startIcon={<BookmarkAddOutlinedIcon />}
                       onClick={() => {}}
                     >
-                      申请选课
+                      选择课程
                     </Button>
                   )}
                   {session?.user?.role == UserRole.ADMIN && (
@@ -307,6 +315,8 @@ export default function Dashboard() {
       return <Profile />;
     } else if (page === Page.CreateExecutor) {
       return <Profile />;
+    } else if (page === Page.UserManagement) {
+      return <UserManagement />;
     }
   };
 

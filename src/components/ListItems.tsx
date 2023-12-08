@@ -30,12 +30,16 @@ const ListDashboardItems: React.FC<{
         <ListItemText primary="课程管理" />
       </ListItemButton>
 
-      <ListItemButton onClick={() => setPage(Page.MyCourse)}>
-        <ListItemIcon>
-          <LayersOutlinedIcon />
-        </ListItemIcon>
-        <ListItemText primary="我的课程" />
-      </ListItemButton>
+      {(session?.user?.role == UserRole.STUDENT ||
+        session?.user?.role == UserRole.EXCUTOR ||
+        session?.user?.role == UserRole.LECTURER) && (
+        <ListItemButton onClick={() => setPage(Page.MyCourse)}>
+          <ListItemIcon>
+            <LayersOutlinedIcon />
+          </ListItemIcon>
+          <ListItemText primary="我的课程" />
+        </ListItemButton>
+      )}
 
       <ListItemButton onClick={() => setPage(Page.Notice)}>
         <ListItemIcon>
@@ -51,12 +55,14 @@ const ListDashboardItems: React.FC<{
         <ListItemText primary="评价反馈" />
       </ListItemButton>
 
-      <ListItemButton onClick={() => setPage(Page.User)}>
-        <ListItemIcon>
-          <PersonAddAlt1OutlinedIcon />
-        </ListItemIcon>
-        <ListItemText primary="职责变更" />
-      </ListItemButton>
+      {session?.user?.role == UserRole.USER && (
+        <ListItemButton onClick={() => setPage(Page.User)}>
+          <ListItemIcon>
+            <PersonAddAlt1OutlinedIcon />
+          </ListItemIcon>
+          <ListItemText primary="职责变更" />
+        </ListItemButton>
+      )}
 
       {session?.user?.role == UserRole.ADMIN && (
         <ListItemButton onClick={() => setPage(Page.UserCheck)}>
@@ -67,19 +73,24 @@ const ListDashboardItems: React.FC<{
         </ListItemButton>
       )}
 
-      <ListItemButton onClick={() => setPage(Page.Data)}>
-        <ListItemIcon>
-          <InsertChartOutlinedIcon />
-        </ListItemIcon>
-        <ListItemText primary="统计数据" />
-      </ListItemButton>
+      {(session?.user?.role == UserRole.ADMIN ||
+        session?.user?.role == UserRole.EXCUTOR) && (
+        <ListItemButton onClick={() => setPage(Page.Data)}>
+          <ListItemIcon>
+            <InsertChartOutlinedIcon />
+          </ListItemIcon>
+          <ListItemText primary="统计数据" />
+        </ListItemButton>
+      )}
 
-      <ListItemButton onClick={() => setPage(Page.Profile)}>
-        <ListItemIcon>
-          <PersonSearchOutlinedIcon />
-        </ListItemIcon>
-        <ListItemText primary="人员管理" />
-      </ListItemButton>
+      {session?.user?.role == UserRole.ADMIN && (
+        <ListItemButton onClick={() => setPage(Page.UserManagement)}>
+          <ListItemIcon>
+            <PersonSearchOutlinedIcon />
+          </ListItemIcon>
+          <ListItemText primary="人员管理" />
+        </ListItemButton>
+      )}
 
       <ListItemButton onClick={() => setPage(Page.Profile)}>
         <ListItemIcon>

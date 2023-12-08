@@ -8,7 +8,7 @@ import { Avatar, Box, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 
 import { UserRole, appConfig } from "@/common/config";
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { api } from "@/utils/api";
 
 const Profile = () => {
@@ -24,7 +24,7 @@ const Profile = () => {
       case UserRole.EXCUTOR:
         return "执行人";
       case UserRole.ADMIN:
-        return "管理员";
+        return "经理";
       case UserRole.USER:
         return "普通用户";
       default:

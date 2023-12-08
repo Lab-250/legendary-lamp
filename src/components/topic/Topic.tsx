@@ -86,8 +86,7 @@ const Topic: React.FC = () => {
       </Grid>
       <Grid item xs={9} spacing={3}>
         <Grid container spacing={3}>
-          {(session?.user?.role == UserRole.ADMIN ||
-            session?.user?.role == UserRole.EXCUTOR) && (
+          {session?.user?.role == UserRole.STUDENT && (
             <Grid item xs={12} alignItems="flex-start" spacing={3}>
               <Paper
                 sx={{
@@ -106,9 +105,7 @@ const Topic: React.FC = () => {
                   }}
                 >
                   <Typography variant="h6">
-                    {"发送 " +
-                      course?.name +
-                      " 课程评价（学生可以发送课程评价）"}
+                    {"发送 " + course?.name + " 课程评价"}
                   </Typography>
                   <TextField
                     id="outlined-multiline-static"

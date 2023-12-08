@@ -102,9 +102,7 @@ const Notice: React.FC = () => {
                   }}
                 >
                   <Typography variant="h6">
-                    {"发送 " +
-                      course?.name +
-                      " 课程通知（经理和执行人可以发送通知）"}
+                    {"发送 " + course?.name + " 课程通知"}
                   </Typography>
                   <TextField
                     id="outlined-multiline-static"
