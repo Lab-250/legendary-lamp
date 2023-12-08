@@ -8,6 +8,7 @@ import { userRoleChangeApplicantionRouter } from "./routers/userRoleChangeApplic
 import { topicRouter } from "./routers/topic";
 import { paymentRecordRouter } from "./routers/paymentRecord";
 import { studentRouter } from "./routers/student";
+import { userRouter } from "./routers/user";
 
 /**
  * This is the primary router for your server.
@@ -24,6 +25,7 @@ export const appRouter = createTRPCRouter({
   student: studentRouter,
   topic: topicRouter,
   userRoleChangeApplicantion: userRoleChangeApplicantionRouter,
+  user: userRouter,
 });
 
 // export type definition of API
