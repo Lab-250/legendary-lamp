@@ -36,12 +36,6 @@ const UserCheck: React.FC = () => {
   const [selectionModel, setSelectionModel] = React.useState<number[] | null>(
     null,
   );
-  const [open, setOpen] = React.useState(true);
-
-  // function
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
 
   return (
     <Grid container spacing={3}>

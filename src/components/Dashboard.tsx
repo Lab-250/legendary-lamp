@@ -198,6 +198,7 @@ export default function Dashboard() {
                               )
                               .map((e: Course) => e.id) ?? [],
                         });
+                        setSelectionModel(null);
                       }}
                     >
                       删除课程

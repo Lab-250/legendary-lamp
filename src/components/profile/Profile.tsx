@@ -10,32 +10,15 @@ import Button from "@mui/material/Button";
 import { UserRole, appConfig } from "@/common/config";
 import type { User } from "@prisma/client";
 import { api } from "@/utils/api";
+import { getRoleName } from "@/utils/role";
 
 const Profile = () => {
   // session
   const { data: session } = useSession();
 
-  const getRoleName = (role: UserRole | null) => {
-    switch (role) {
-      case UserRole.STUDENT:
-        return "学生";
-      case UserRole.LECTURER:
-        return "讲师";
-      case UserRole.EXCUTOR:
-        return "执行人";
-      case UserRole.ADMIN:
-        return "经理";
-      case UserRole.USER:
-        return "普通用户";
-      default:
-        return "未知";
-    }
-  };
-
   const [user, setUser] = React.useState<User | null>(null);
 
-  const { data: userData, refetch: refetchUserData } =
-    api.user.getSessionUser.useQuery();
+  const { data: userData, refetch: refetchUserData } = api.user.get.useQuery();
 
   return (
     <Grid container spacing={3}>
