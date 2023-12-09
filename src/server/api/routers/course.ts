@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { Course } from "@prisma/client";
 
 export const courseRouter = createTRPCRouter({
   getById: publicProcedure
@@ -79,8 +80,83 @@ export const courseRouter = createTRPCRouter({
         where: {
           id: {
             in: input.ids,
-          }
+          },
         },
       });
+    }),
+
+  statistics: publicProcedure
+    .output(
+      z.array(
+        z.object({
+          name: z.string(),
+          selected: z.number(),
+          price: z.number(),
+          income: z.number(),
+          payed: z.number(),
+          signed: z.number(),
+          commented: z.number(),
+          grade: z.number(),
+          notice: z.number(),
+        }),
+      ),
+    )
+    .query(async ({ ctx }) => {
+      const courses = await ctx.db.course.findMany({
+        include: {},
+      });
+
+      const result = await Promise.all(
+        courses.map(async (item: Course) => {
+          const selected = await ctx.db.courseRecord.count({
+            where: {
+              courseId: item.id,
+            },
+          });
+          const payed = await ctx.db.courseRecord.count({
+            where: {
+              courseId: item.id,
+              payed: true,
+            },
+          });
+          const signed = await ctx.db.courseRecord.count({
+            where: {
+              courseId: item.id,
+              signed: true,
+            },
+          });
+          const commented = await ctx.db.topic.count({
+            where: {
+              courseId: item.id,
+            },
+          });
+          const result = await ctx.db.topic.aggregate({
+            where: {
+              courseId: item.id,
+            },
+            _avg: {
+              grade: true,
+            },
+          });
+          const notice = await ctx.db.notice.count({
+            where: {
+              courseId: item.id,
+            },
+          });
+          return {
+            name: item.name,
+            selected,
+            price: item.price.toNumber(),
+            income: item.price.toNumber() * payed,
+            payed,
+            signed,
+            commented,
+            grade: result._avg.grade ?? 0,
+            notice,
+          };
+        }),
+      );
+
+      return result;
     }),
 });

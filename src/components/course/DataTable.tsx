@@ -6,6 +6,7 @@ export default function DataTable({
   columns,
   selectModel,
   setSelectionModel,
+  checkboxSelection = true,
 }) {
   return (
     <div style={{ width: "100%" }}>
@@ -18,7 +19,7 @@ export default function DataTable({
           },
         }}
         pageSizeOptions={[10, 20, 50, 100]}
-        checkboxSelection
+        checkboxSelection={checkboxSelection}
         rowSelectionModel={selectModel}
         onRowSelectionModelChange={(newSelection) => {
           setSelectionModel(newSelection);

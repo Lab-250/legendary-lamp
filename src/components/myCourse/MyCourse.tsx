@@ -9,8 +9,6 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
-import type { Course, CourseRecord, Executor, Lecturer } from "@prisma/client";
-
 import DataTable from "@/components/course/DataTable";
 
 import { UserRole } from "@//common/config";
@@ -42,76 +40,74 @@ const MyCourse: React.FC = () => {
 
   return (
     <Grid container spacing={3}>
-      {(session?.user?.role == UserRole.ADMIN ||
-        session?.user?.role == UserRole.STUDENT) && (
-        <Grid item xs={12}>
-          <Paper
-            sx={{
-              p: 2,
-              display: "flex",
-              flexDirection: "rows",
-            }}
-          >
-            {session?.user?.role == UserRole.STUDENT && (
-              <Stack direction="row" spacing={2}>
-                <Button
-                  variant="outlined"
-                  startIcon={<AssignmentTurnedInOutlinedIcon />}
-                  onClick={() => {
-                    updateCourseRecord.mutate({
-                      ids:
-                        courses
-                          ?.filter(
-                            (e, i: number) => selectionModel?.includes(i + 1),
-                          )
-                          .map((e) => e.id) ?? [],
-                      signed: true,
-                    });
-                    setSelectionModel([]);
-                  }}
-                >
-                  课程签到
-                </Button>
-                <Button
-                  variant="outlined"
-                  startIcon={<PaymentIcon />}
-                  onClick={() => {
-                    updateCourseRecord.mutate({
-                      ids:
-                        courses
-                          ?.filter(
-                            (e, i: number) => selectionModel?.includes(i + 1),
-                          )
-                          .map((e) => e.id) ?? [],
-                      payed: true,
-                    });
-                    setSelectionModel([]);
-                  }}
-                >
-                  课程缴费
-                </Button>
-                <Button
-                  variant="outlined"
-                  startIcon={<ExitToAppIcon />}
-                  onClick={() => {
-                    deleteCourseRecord.mutate({
-                      ids:
-                        courses
-                          ?.filter(
-                            (e, i: number) => selectionModel?.includes(i + 1),
-                          )
-                          .map((e) => e.id) ?? [],
-                    });
-                    setSelectionModel([]);
-                  }}
-                >
-                  退选课程
-                </Button>
-              </Stack>
-            )}
-          </Paper>
-        </Grid>
-      )}
+      <Grid item xs={12}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "rows",
+          }}
+        >
+          {session?.user?.role == UserRole.STUDENT && (
+            <Stack direction="row" spacing={2}>
+              <Button
+                variant="outlined"
+                startIcon={<AssignmentTurnedInOutlinedIcon />}
+                onClick={() => {
+                  updateCourseRecord.mutate({
+                    ids:
+                      courses
+                        ?.filter(
+                          (e, i: number) => selectionModel?.includes(i + 1),
+                        )
+                        .map((e) => e.id) ?? [],
+                    signed: true,
+                  });
+                  setSelectionModel([]);
+                }}
+              >
+                课程签到
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<PaymentIcon />}
+                onClick={() => {
+                  updateCourseRecord.mutate({
+                    ids:
+                      courses
+                        ?.filter(
+                          (e, i: number) => selectionModel?.includes(i + 1),
+                        )
+                        .map((e) => e.id) ?? [],
+                    payed: true,
+                  });
+                  setSelectionModel([]);
+                }}
+              >
+                课程缴费
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<ExitToAppIcon />}
+                onClick={() => {
+                  deleteCourseRecord.mutate({
+                    ids:
+                      courses
+                        ?.filter(
+                          (e, i: number) => selectionModel?.includes(i + 1),
+                        )
+                        .map((e) => e.id) ?? [],
+                  });
+                  setSelectionModel([]);
+                }}
+              >
+                退选课程
+              </Button>
+            </Stack>
+          )}
+        </Paper>
+      </Grid>
+
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
           <DataTable
