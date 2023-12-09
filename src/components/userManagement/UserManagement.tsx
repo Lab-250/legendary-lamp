@@ -14,6 +14,7 @@ import DataTable from "@/components/course/DataTable";
 import { UserRole } from "@/common/config";
 import { api } from "@/utils/api";
 import { getRoleName } from "@/utils/role";
+import type { GridRowSelectionModel } from "@mui/x-data-grid/models/gridRowSelectionModel";
 
 const UserManagement: React.FC = () => {
   // session
@@ -29,9 +30,8 @@ const UserManagement: React.FC = () => {
   });
 
   // state
-  const [selectionModel, setSelectionModel] = React.useState<number[] | null>(
-    null,
-  );
+  const [selectionModel, setSelectionModel] =
+    React.useState<GridRowSelectionModel>([]);
 
   return (
     <Grid container spacing={3}>
@@ -66,7 +66,7 @@ const UserManagement: React.FC = () => {
                         )
                         .map((e: User) => e.id) ?? [],
                   });
-                  setSelectionModel(null);
+                  setSelectionModel([]);
                 }}
               >
                 删除用户
@@ -124,6 +124,7 @@ const UserManagement: React.FC = () => {
                 headerAlign: "center",
               },
             ]}
+            selectModel={selectionModel}
             setSelectionModel={setSelectionModel}
           />
         </Paper>

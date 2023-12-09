@@ -14,6 +14,7 @@ import DataTable from "@/components/course/DataTable";
 import { UserRole } from "@/common/config";
 import { api } from "@/utils/api";
 import { getRoleName } from "@/utils/role";
+import type { GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 
 const UserCheck: React.FC = () => {
   // session
@@ -37,9 +38,8 @@ const UserCheck: React.FC = () => {
   });
 
   // state
-  const [selectionModel, setSelectionModel] = React.useState<number[] | null>(
-    null,
-  );
+  const [selectionModel, setSelectionModel] =
+    React.useState<GridRowSelectionModel>([]);
 
   return (
     <Grid container spacing={3}>
@@ -59,7 +59,7 @@ const UserCheck: React.FC = () => {
                 startIcon={<CheckOutlinedIcon />}
                 onClick={() => {
                   if (selectionModel) {
-                    for (const e of selectionModel) {
+                    for (const e of selectionModel as number[]) {
                       createDestRole.mutate({
                         applicantId:
                           userRoleChangeApplicantion?.at(e - 1)?.id ?? "",
@@ -69,7 +69,7 @@ const UserCheck: React.FC = () => {
                           userRoleChangeApplicantion?.at(e - 1)?.destType ?? "",
                       });
                     }
-                    setSelectionModel(null);
+                    setSelectionModel([]);
                   }
                 }}
               >
@@ -83,10 +83,12 @@ const UserCheck: React.FC = () => {
                   if (selectionModel) {
                     deleteUserRoleChangeApplicantions.mutate({
                       ids: selectionModel.map(
-                        (e) => userRoleChangeApplicantion?.at(e - 1)?.id ?? "",
+                        (e: GridRowId) =>
+                          userRoleChangeApplicantion?.at((e as number) - 1)
+                            ?.id ?? "",
                       ),
                     });
-                    setSelectionModel(null);
+                    setSelectionModel([]);
                   }
                 }}
               >
@@ -160,6 +162,7 @@ const UserCheck: React.FC = () => {
                 headerAlign: "center",
               },
             ]}
+            selectModel={selectionModel}
             setSelectionModel={setSelectionModel}
           />
         </Paper>

@@ -44,6 +44,7 @@ import { UserRole, appConfig } from "../common/config";
 import { api } from "@/utils/api";
 import Profile from "./profile/Profile";
 import UserManagement from "./userManagement/UserManagement";
+import type { GridRowSelectionModel } from "@mui/x-data-grid";
 
 const drawerWidth = 240;
 interface AppBarProps extends MuiAppBarProps {
@@ -126,11 +127,11 @@ export default function Dashboard() {
       void refetchCourses();
     },
   });
+  const selectCourse = api.courseRecord.create.useMutation();
 
   // state
-  const [selectionModel, setSelectionModel] = React.useState<number[] | null>(
-    null,
-  );
+  const [selectionModel, setSelectionModel] =
+    React.useState<GridRowSelectionModel>([]);
   const [open, setOpen] = React.useState(true);
   const [page, setPage] = React.useState<Page>(Page.Dashboard);
 
@@ -179,7 +180,18 @@ export default function Dashboard() {
                     <Button
                       variant="outlined"
                       startIcon={<BookmarkAddOutlinedIcon />}
-                      onClick={() => {}}
+                      onClick={() => {
+                        selectCourse.mutate({
+                          courseIds:
+                            courses
+                              ?.filter(
+                                (e: Course, i: number) =>
+                                  selectionModel?.includes(i + 1),
+                              )
+                              .map((e: Course) => e.id) ?? [],
+                        });
+                        setSelectionModel([]);
+                      }}
                     >
                       选择课程
                     </Button>
@@ -198,7 +210,7 @@ export default function Dashboard() {
                               )
                               .map((e: Course) => e.id) ?? [],
                         });
-                        setSelectionModel(null);
+                        setSelectionModel([]);
                       }}
                     >
                       删除课程
@@ -283,6 +295,7 @@ export default function Dashboard() {
                     headerAlign: "center",
                   },
                 ]}
+                selectModel={selectionModel}
                 setSelectionModel={setSelectionModel}
               />
             </Paper>

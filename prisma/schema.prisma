@@ -175,11 +175,10 @@ model Notice {
 }
 
 model CourseRecord {
-    id        String    @id @default(cuid())
-    payTime   DateTime?
-    payAmount Decimal?
-    payed     Boolean?
-    signed    Boolean?
+    id      String    @id @default(cuid())
+    payTime DateTime?
+    payed   Boolean?  @default(false)
+    signed  Boolean?  @default(false)
 
     student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
     studentId String?
@@ -190,7 +189,10 @@ model CourseRecord {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    @@unique([studentId, courseId])
     @@index([payTime])
+    @@index([studentId])
+    @@index([courseId])
 }
 
 model Topic {
