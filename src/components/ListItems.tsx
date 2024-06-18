@@ -45,14 +45,14 @@ const ListDashboardItems: React.FC<{
         <ListItemIcon>
           <LibraryBooksOutlinedIcon />
         </ListItemIcon>
-        <ListItemText primary="通知公告" />
+        <ListItemText primary="课程通知" />
       </ListItemButton>
 
       <ListItemButton onClick={() => setPage(Page.Topic)}>
         <ListItemIcon>
           <BubbleChartOutlinedIcon />
         </ListItemIcon>
-        <ListItemText primary="评价反馈" />
+        <ListItemText primary="课程评价" />
       </ListItemButton>
 
       {session?.user?.role == UserRole.USER && (

@@ -9,19 +9,15 @@ import FormControl from "@mui/material/FormControl";
 
 import type { Lecturer, Course, Executor } from "@prisma/client";
 import { api } from "@/utils/api";
-import { set } from "zod";
+import { getRoleName } from "@/utils/role";
+import { UserRole } from "@/common/config";
 
 const CourseForm: React.FC<{
   course: Course;
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
   setLecturerName: React.Dispatch<React.SetStateAction<string>>;
   setExecutorName: React.Dispatch<React.SetStateAction<string>>;
-}> = ({
-  course,
-  setCourse,
-  setLecturerName,
-  setExecutorName,
-}) => {
+}> = ({ course, setCourse, setLecturerName, setExecutorName }) => {
   const { data: lecturer } = api.lecturer.getAll.useQuery();
   const { data: executor } = api.executor.getAll.useQuery();
 
@@ -93,7 +89,9 @@ const CourseForm: React.FC<{
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
-            <InputLabel id="lecturer-label">讲师</InputLabel>
+            <InputLabel id="lecturer-label">
+              {getRoleName(UserRole.LECTURER)}
+            </InputLabel>
             <Select
               labelId="lecturer-label"
               id="lecturer"
@@ -121,7 +119,9 @@ const CourseForm: React.FC<{
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
-            <InputLabel id="executor-label">执行人</InputLabel>
+            <InputLabel id="executor-label">
+              {getRoleName(UserRole.EXECUTOR)}
+            </InputLabel>
             <Select
               labelId="executor-label"
               id="executor"

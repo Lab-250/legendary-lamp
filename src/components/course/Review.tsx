@@ -4,6 +4,9 @@ import Grid from "@mui/material/Grid";
 
 import { type Course } from "@prisma/client";
 
+import { UserRole } from "@/common/config";
+import { getRoleName } from "@/utils/role";
+
 const Review: React.FC<{
   course: Course;
   lecturerName: string;
@@ -22,8 +25,12 @@ const Review: React.FC<{
           )}`}</Typography>
           <Typography gutterBottom>{`课程地点：${course.place}`}</Typography>
           <Typography gutterBottom>{`课程时间：${course.time}`}</Typography>
-          <Typography gutterBottom>{`讲师：${lecturerName}`}</Typography>
-          <Typography gutterBottom>{`执行人：${executorName}`}</Typography>
+          <Typography gutterBottom>{`${getRoleName(
+            UserRole.LECTURER,
+          )}：${lecturerName}`}</Typography>
+          <Typography gutterBottom>{`${getRoleName(
+            UserRole.EXECUTOR,
+          )}：${executorName}`}</Typography>
         </Grid>
       </Grid>
     </React.Fragment>

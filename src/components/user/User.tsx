@@ -11,6 +11,7 @@ import { Page } from "../Dashboard";
 import { UserRole } from "@/common/config";
 import { api } from "@/utils/api";
 import { Typography } from "@mui/material";
+import { getRoleName } from "@/utils/role";
 
 const User: React.FC<{
   setPage: React.Dispatch<React.SetStateAction<Page>>;
@@ -51,7 +52,7 @@ const User: React.FC<{
                     });
                   }}
                 >
-                  申请变更为学生
+                  申请变更为{getRoleName(UserRole.STUDENT)}
                 </Button>
 
                 <Button
@@ -64,7 +65,7 @@ const User: React.FC<{
                     });
                   }}
                 >
-                  申请变更为讲师
+                  申请变更为{getRoleName(UserRole.LECTURER)}
                 </Button>
 
                 <Button
@@ -77,11 +78,13 @@ const User: React.FC<{
                     });
                   }}
                 >
-                  申请变更为执行人
+                  申请变更为{getRoleName(UserRole.EXECUTOR)}
                 </Button>
               </>
             ) : (
-              <Typography variant="h6">已申请，请等待经理审核！</Typography>
+              <Typography variant="h6">
+                已申请，请等待{getRoleName(UserRole.ADMIN)}审核！
+              </Typography>
             )}
           </Stack>
         </Paper>

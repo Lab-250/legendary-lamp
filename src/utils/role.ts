@@ -5,11 +5,11 @@ export const getRoleName = (role: UserRole | string | null) => {
     case UserRole.STUDENT:
       return "学生";
     case UserRole.LECTURER:
-      return "讲师";
+      return "教师";
     case UserRole.EXECUTOR:
-      return "执行人";
+      return "教务员";
     case UserRole.ADMIN:
-      return "经理";
+      return "校园管理员";
     case UserRole.USER:
       return "普通用户";
     default:

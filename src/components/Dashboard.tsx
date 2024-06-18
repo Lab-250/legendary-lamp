@@ -45,6 +45,7 @@ import { api } from "@/utils/api";
 import Profile from "./profile/Profile";
 import UserManagement from "./userManagement/UserManagement";
 import type { GridRowSelectionModel } from "@mui/x-data-grid";
+import { getRoleName } from "@/utils/role";
 
 const drawerWidth = 240;
 interface AppBarProps extends MuiAppBarProps {
@@ -282,14 +283,14 @@ export default function Dashboard() {
                   },
                   {
                     field: "executor",
-                    headerName: "执行人",
+                    headerName: getRoleName(UserRole.EXECUTOR),
                     width: 100,
                     align: "center",
                     headerAlign: "center",
                   },
                   {
                     field: "lecturer",
-                    headerName: "讲师",
+                    headerName: getRoleName(UserRole.LECTURER),
                     width: 100,
                     align: "center",
                     headerAlign: "center",
